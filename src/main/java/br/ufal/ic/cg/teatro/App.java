@@ -20,6 +20,7 @@ public class App {
 		jframe.pack();
 		jframe.setLocation(0, 0);
 		//jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		jframe.addKeyListener(canvas);
 		jframe.getContentPane().add(canvas);
         jframe.setSize(width, height);//GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA
         jframe.setVisible(true);

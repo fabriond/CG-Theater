@@ -1,5 +1,7 @@
 package br.ufal.ic.cg.teatro;
 
+import java.util.ArrayList;
+
 import com.jogamp.opengl.DebugGL2;
 import com.jogamp.opengl.GL2;
 
@@ -9,27 +11,136 @@ public class MyGL extends DebugGL2{
 		super(downstream);
 	}
 	
-	public void drawCircularWall(double x, double y, double radius) {
-		int aux = 0;
-		int lineAmount = 100;
+	ArrayList<Point> plateauPoints = new ArrayList<>();
+	ArrayList<Point> innerPlateauPoints = new ArrayList<>();
+	
+	public void drawCircularWall(double xCenter, double zCenter, double radius, double yMin, double yMax) {
+		Point prevLower = new Point(0, 0, 0);
+		Point prevHigher = new Point(0, 0, 0);
+		double yDiff = yMax - yMin;
+		double yPlateau = yDiff*3/4 + yMin;
 		
 		glBegin(GL_QUAD_STRIP);
-			for(int i = 0; i <= lineAmount;i++) {
-				glVertex3d(x + (radius * Math.cos(i *  Math.PI / lineAmount)), y + (radius* Math.sin(i * Math.PI / lineAmount)), aux);
-				if(aux == 0) aux += 10;
-				else aux -= 10;
-				glVertex3d(x + (radius * Math.cos(i *  Math.PI / lineAmount)), y + (radius* Math.sin(i * Math.PI / lineAmount)), aux);
+			for(int i = -90; i <= 90; i+=10){
+				double ang = (i * Math.PI/180);
+				double x = Math.cos(ang)*radius;
+				double z = Math.sin(ang)*radius;
+				double xAux = xCenter + x*2/3;
+				double zAux = zCenter + z*2/3;
+				x += xCenter;
+				z += zCenter;
+
+				//used to draw stands
+				plateauPoints.add(new Point(x, yPlateau, z));
+				plateauPoints.add(new Point(xAux, yPlateau, zAux));
+				innerPlateauPoints.add(new Point(xAux, yPlateau, zAux));
+				innerPlateauPoints.add(new Point(xAux, yPlateau+0.5, zAux));				
+				
+				if(i >= -10 && i <= 10) {
+					if(i == -10) {
+						glVertex3d(prevLower.addY(yDiff*1/4-0.05));
+						glVertex3d(prevHigher);
+					}
+					glVertex3d(x, yDiff*1/4 + yMin-0.05, z);
+					glVertex3d(x, yMax, z);
+					if(i == 10) {
+						glVertex3d(x, yMin, z);
+						glVertex3d(x, yMax, z);
+					}
+				} else {
+					prevLower = new Point(x, yMin, z);
+					prevHigher = new Point(x, yMax, z);
+					glVertex3d(x, yMin, z);
+					glVertex3d(x, yMax, z);
+				}
 			}
-		glEnd();
+		glEnd();				
+	}
+	
+	public void glColor(double r, double g, double b, double a) {
+		glColor4d(r/255, g/255, b/255, a);
+	}
+	
+	private void drawPlateaus(double zDiff, double yDiff) {
+		for(int i = 0; i < 2; ++i) {
+			glPushMatrix();
+			if(i == 1) glTranslated(0, 0.5, 0);
+			for(int j = 0; j < 3; ++j) {
+				glBegin(GL_QUAD_STRIP);
+					glVertex3d(plateauPoints.get(0).subX(zDiff));
+					glVertex3d(plateauPoints.get(1).subX(zDiff));
+					for(Point p : plateauPoints)
+						glVertex3d(p);
+					glVertex3d(plateauPoints.get(plateauPoints.size()-2).subX(zDiff));
+					glVertex3d(plateauPoints.get(plateauPoints.size()-1).subX(zDiff));
+				glEnd();
+				glTranslated(0, -1.0/4.0*yDiff, 0);
+			}
+			glPopMatrix();
+		}
+		glPushMatrix();
+		for(int j = 0; j < 3; ++j) {
+			glBegin(GL_QUAD_STRIP);
+				glVertex3d(innerPlateauPoints.get(0).subX(zDiff));
+				glVertex3d(innerPlateauPoints.get(1).subX(zDiff));
+				System.out.println(innerPlateauPoints.size());
+				for(Point p : innerPlateauPoints)
+					glVertex3d(p);
+				glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-2).subX(zDiff));
+				glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-1).subX(zDiff));
+			glEnd();
+			glTranslated(0, -1.0/4.0*yDiff, 0);
+		}
+		glPopMatrix();
+		
+		
+	}
+	
+	void glVertex3d(Point p) {
+		glVertex3d(p.x, p.y, p.z);
 	}
 
-	public void drawWall(double xMin, double zMin, double xMax, double zMax) {
-		glBegin(GL_QUADS);
-			glVertex3d(xMin, 0, zMin);
-			glVertex3d(xMin, 0, zMax);
-			glVertex3d(xMax, 0, zMax);
-			glVertex3d(xMax, 0, zMin);
-		glEnd();			
+	public void drawTheater(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+		glColor(234, 181, 67,1.0);
+		
+		//glColor3d(1, 0, 0);
+		glBegin(GL_QUAD_STRIP);
+			glVertex3d(xMin, yMax, zMin);
+			glVertex3d(xMin, yMin, zMin);
+			
+			glVertex3d(xMin, yMax, zMax);
+			glVertex3d(xMin, yMin, zMax);
+			
+			glVertex3d(xMax, yMax, zMax);
+			glVertex3d(xMax, yMin, zMax);
+			
+			glVertex3d(xMax, yMax, zMin);
+			glVertex3d(xMax, yMin, zMin);
+			
+		glEnd();
+		
+		//glColor3d(0, 0, 1);
+		glRotated(90, 0, 1, 0);
+		drawCircularWall((zMax - zMin)/2, (xMax+xMin)/2, (xMax - xMin)/2, yMin, yMax);
+
+		//glColor3d(0, 1, 0);
+		glColor(204, 142, 53, 1.0);
+		drawPlateaus((zMax - zMin), (yMax - yMin));
+	}
+	
+	private class Point{
+		double x, y, z;
+		public Point(double x, double y, double z) {
+			this.x = x; this.y = y; this.z = z;
+		}
+		
+		public Point addY(double plus) {
+			return new Point(x, y+plus, z);
+		}
+		
+		public Point subX(double sub) {
+			return new Point(x-sub, y, z);
+		}
 	}
 	
 }
