@@ -10,6 +10,8 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
 
+import br.ufal.ic.cg.teatro.Camera.Direction;
+
 public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 
 	private static final long serialVersionUID = 1L;
@@ -23,7 +25,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		super(capabilities);
 		setSize(width, height);
 		addGLEventListener(this);
-		camera = new Camera(0.0, -5.0);
+		camera = new Camera(150.0, 10.0, -100.0);
 	}
 	
 	@Override
@@ -51,7 +53,17 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		gl.glRotated(xAngle, 1, 0, 0);
 		gl.glRotated(yAngle, 0, 1, 0);
 		gl.glRotated(zAngle, 0, 1, camera.getCenterZ());
-		gl.drawTheater(-5.0, -0.7, -7.0, 5.0, 9.3, 7.0);
+		
+		//draw Ground
+		gl.glColor(25, 42, 86, 1.0);
+		gl.glBegin(GL2.GL_QUADS);
+			gl.glVertex3d(-1000.0, 0.0, -1000.0);
+			gl.glVertex3d(1000.0, 0.0, -1000.0);
+			gl.glVertex3d(1000.0, 0.0, 1000.0);
+			gl.glVertex3d(-1000.0, 0.0, 1000.0);
+		gl.glEnd();
+		gl.drawTheater(100.0, 1.0, 100.0, 200.0, 100.0, 240.0);
+		//gl.drawTheater(-5.0, -0.7, -7.0, 5.0, 9.3, 7.0);
 	}
 
 	@Override
@@ -71,17 +83,33 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		double fraction = 5;
 		if(e.getKeyCode() == KeyEvent.VK_W) {
 			System.out.println("W");
-			camera.moveForward(fraction);
+			camera.move(fraction, Direction.UP);
 		} else if(e.getKeyCode() == KeyEvent.VK_S) {
 			System.out.println("S");
-			camera.moveBackward(fraction);
+			camera.move(fraction, Direction.DOWN);
 		} else if(e.getKeyCode() == KeyEvent.VK_A) {
 			System.out.println("A");
-            camera.turnLeft(0.05);
+			camera.move(fraction, Direction.LEFT);
 		} else if(e.getKeyCode() == KeyEvent.VK_D) {
 			System.out.println("D");
-			camera.turnRight(0.05);
-		} else if(e.getKeyCode() == KeyEvent.VK_X) {
+			camera.move(fraction, Direction.RIGHT);
+		} 
+		
+		else if(e.getKeyCode() == KeyEvent.VK_UP) {
+			System.out.println("^");
+            camera.turn(0.05, Direction.UP);
+		} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+			System.out.println("v");
+			camera.turn(0.05, Direction.DOWN);
+		} else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
+			System.out.println("<");
+            camera.turn(0.05, Direction.LEFT);
+		} else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			System.out.println(">");
+			camera.turn(0.05, Direction.RIGHT);
+		} 
+		
+		else if(e.getKeyCode() == KeyEvent.VK_X) {
 			System.out.println("D");
 			xAngle-=0.7;
 		} else if(e.getKeyCode() == KeyEvent.VK_Y) {

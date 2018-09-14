@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jogamp.opengl.DebugGL2;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public class MyGL extends DebugGL2{
 
@@ -14,7 +15,8 @@ public class MyGL extends DebugGL2{
 	ArrayList<Point> plateauPoints = new ArrayList<>();
 	ArrayList<Point> innerPlateauPoints = new ArrayList<>();
 	
-	public void drawCircularWall(double xCenter, double zCenter, double radius, double yMin, double yMax) {
+	public void drawCircularWall(double radius, double yMin, double yMax) {
+		double xCenter=0, zCenter=0;
 		Point prevLower = new Point(0, 0, 0);
 		Point prevHigher = new Point(0, 0, 0);
 		double yDiff = yMax - yMin;
@@ -34,14 +36,14 @@ public class MyGL extends DebugGL2{
 				plateauPoints.add(new Point(x, yPlateau, z));
 				plateauPoints.add(new Point(xAux, yPlateau, zAux));
 				innerPlateauPoints.add(new Point(xAux, yPlateau, zAux));
-				innerPlateauPoints.add(new Point(xAux, yPlateau+0.5, zAux));				
+				innerPlateauPoints.add(new Point(xAux, yPlateau+5.0, zAux));				
 				
 				if(i >= -10 && i <= 10) {
 					if(i == -10) {
-						glVertex3d(prevLower.addY(yDiff*1/4-0.05));
+						glVertex3d(prevLower.addY(yDiff*1/4-0.5));
 						glVertex3d(prevHigher);
 					}
-					glVertex3d(x, yDiff*1/4 + yMin-0.05, z);
+					glVertex3d(x, yDiff*1/4 + yMin-0.5, z);
 					glVertex3d(x, yMax, z);
 					if(i == 10) {
 						glVertex3d(x, yMin, z);
@@ -64,7 +66,7 @@ public class MyGL extends DebugGL2{
 	private void drawPlateaus(double zDiff, double yDiff) {
 		for(int i = 0; i < 2; ++i) {
 			glPushMatrix();
-			if(i == 1) glTranslated(0, 0.5, 0);
+			if(i == 1) glTranslated(0.0, 5.0, 0.0);
 			for(int j = 0; j < 3; ++j) {
 				glBegin(GL_QUAD_STRIP);
 					glVertex3d(plateauPoints.get(0).subX(zDiff));
@@ -83,7 +85,6 @@ public class MyGL extends DebugGL2{
 			glBegin(GL_QUAD_STRIP);
 				glVertex3d(innerPlateauPoints.get(0).subX(zDiff));
 				glVertex3d(innerPlateauPoints.get(1).subX(zDiff));
-				System.out.println(innerPlateauPoints.size());
 				for(Point p : innerPlateauPoints)
 					glVertex3d(p);
 				glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-2).subX(zDiff));
@@ -101,9 +102,9 @@ public class MyGL extends DebugGL2{
 	}
 
 	public void drawTheater(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
-		glColor(234, 181, 67,1.0);
 		
 		//glColor3d(1, 0, 0);
+		glColor(234, 181, 67,1.0);
 		glBegin(GL_QUAD_STRIP);
 			glVertex3d(xMin, yMax, zMin);
 			glVertex3d(xMin, yMin, zMin);
@@ -116,16 +117,21 @@ public class MyGL extends DebugGL2{
 			
 			glVertex3d(xMax, yMax, zMin);
 			glVertex3d(xMax, yMin, zMin);
-			
 		glEnd();
+		//TODO: ADD THE PRESENTATION PLACE THINGY
+		GLUT glut = new GLUT();
+		glut.glutSolidCube(1.0f);
 		
 		//glColor3d(0, 0, 1);
+		glColor(234, 181, 67,1.0);
 		glRotated(90, 0, 1, 0);
-		drawCircularWall((zMax - zMin)/2, (xMax+xMin)/2, (xMax - xMin)/2, yMin, yMax);
-
-		//glColor3d(0, 1, 0);
-		glColor(204, 142, 53, 1.0);
-		drawPlateaus((zMax - zMin), (yMax - yMin));
+		glPushMatrix();
+			glTranslated(-zMin, 0.0, (xMax-xMin)/2 + xMin);
+			drawCircularWall((xMax - xMin)/2, yMin, yMax);
+			//glColor3d(0, 1, 0);
+			glColor(204, 142, 53, 1.0);
+			drawPlateaus((zMax - zMin), (yMax - yMin));
+		glPopMatrix();
 	}
 	
 	private class Point{
