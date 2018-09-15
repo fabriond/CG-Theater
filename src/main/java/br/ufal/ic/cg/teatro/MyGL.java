@@ -40,7 +40,7 @@ public class MyGL extends DebugGL2{
 				
 				if(i >= -10 && i <= 10) {
 					if(i == -10) {
-						glVertex3d(prevLower.addY(yDiff*1/4-0.5));
+						glVertex3d(prevLower.addToNewPoint(0.0, yDiff*1.0/4.0-0.5, 0.0));
 						glVertex3d(prevHigher);
 					}
 					glVertex3d(x, yDiff*1/4 + yMin-0.5, z);
@@ -69,12 +69,12 @@ public class MyGL extends DebugGL2{
 			if(i == 1) glTranslated(0.0, 5.0, 0.0);
 			for(int j = 0; j < 3; ++j) {
 				glBegin(GL_QUAD_STRIP);
-					glVertex3d(plateauPoints.get(0).subX(zDiff));
-					glVertex3d(plateauPoints.get(1).subX(zDiff));
+					glVertex3d(plateauPoints.get(0).addToNewPoint(-zDiff, 0.0, 0.0));
+					glVertex3d(plateauPoints.get(1).addToNewPoint(-zDiff, 0.0, 0.0));
 					for(Point p : plateauPoints)
 						glVertex3d(p);
-					glVertex3d(plateauPoints.get(plateauPoints.size()-2).subX(zDiff));
-					glVertex3d(plateauPoints.get(plateauPoints.size()-1).subX(zDiff));
+					glVertex3d(plateauPoints.get(plateauPoints.size()-2).addToNewPoint(-zDiff, 0.0, 0.0));
+					glVertex3d(plateauPoints.get(plateauPoints.size()-1).addToNewPoint(-zDiff, 0.0, 0.0));
 				glEnd();
 				glTranslated(0, -1.0/4.0*yDiff, 0);
 			}
@@ -83,12 +83,12 @@ public class MyGL extends DebugGL2{
 		glPushMatrix();
 		for(int j = 0; j < 3; ++j) {
 			glBegin(GL_QUAD_STRIP);
-				glVertex3d(innerPlateauPoints.get(0).subX(zDiff));
-				glVertex3d(innerPlateauPoints.get(1).subX(zDiff));
+				glVertex3d(innerPlateauPoints.get(0).addToNewPoint(-zDiff, 0.0, 0.0));
+				glVertex3d(innerPlateauPoints.get(1).addToNewPoint(-zDiff, 0.0, 0.0));
 				for(Point p : innerPlateauPoints)
 					glVertex3d(p);
-				glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-2).subX(zDiff));
-				glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-1).subX(zDiff));
+				glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-2).addToNewPoint(-zDiff, 0.0, 0.0));
+				glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-1).addToNewPoint(-zDiff, 0.0, 0.0));
 			glEnd();
 			glTranslated(0, -1.0/4.0*yDiff, 0);
 		}
@@ -132,21 +132,6 @@ public class MyGL extends DebugGL2{
 			glColor(204, 142, 53, 1.0);
 			drawPlateaus((zMax - zMin), (yMax - yMin));
 		glPopMatrix();
-	}
-	
-	private class Point{
-		double x, y, z;
-		public Point(double x, double y, double z) {
-			this.x = x; this.y = y; this.z = z;
-		}
-		
-		public Point addY(double plus) {
-			return new Point(x, y+plus, z);
-		}
-		
-		public Point subX(double sub) {
-			return new Point(x-sub, y, z);
-		}
 	}
 	
 }

@@ -25,6 +25,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		super(capabilities);
 		setSize(width, height);
 		addGLEventListener(this);
+		addKeyListener(this);
 		camera = new Camera(150.0, 10.0, -100.0);
 	}
 	

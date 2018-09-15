@@ -4,14 +4,13 @@ import com.jogamp.opengl.glu.GLU;
 
 public class Camera {
 	public static enum Direction {UP, DOWN, LEFT, RIGHT;}
-	private double x, y, z;
+	private final Point upDirection = new Point(0.0, 1.0, 0.0);
+	private Point eyePos;
 	private double dx, dy, dz;
 	private double hAngle, vAngle;
 	
 	public Camera(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		eyePos = new Point(x, y, z);
 		this.dx = 0.0;
 		this.dy = 0.0;
 		this.dz = 1.0;
@@ -20,49 +19,44 @@ public class Camera {
 	}
 	
 	public double getCenterX() {
-		return x+dx;
+		return eyePos.x+dx;
 	}
 	
 	public double getCenterZ() {
-		return z+dz;
+		return eyePos.z+dz;
 	}
 	
 	public void setLookAt(GLU glu) {
-		glu.gluLookAt(x, y, z, x+dx, y+dy, z+dz, 0.0, 1.0, 0.0);
+		Point.lookAt(glu, eyePos, eyePos.addToNewPoint(dx, dy, dz), upDirection);
 	}
 	
 	public void move(double stepSize, Direction direction) {
+		double module;
+		//Idea for the left and right strafe codes gotten from: https://gamedev.stackexchange.com/questions/63819/first-person-camera-strafing-at-angle
 		switch(direction) {
 			case UP:
-				x += dx * stepSize;
-				z += dz * stepSize;
+				eyePos.move(dx * stepSize, 0.0, dz * stepSize);
 			break;
 			
 			case DOWN:
-				x -= dx * stepSize;
-				z -= dz * stepSize;
+				eyePos.move(-dx * stepSize, 0.0, -dz * stepSize);
 			break;
 			
 			case LEFT:
-				x += dz * stepSize;
-				z += dx * stepSize;
+				Point left = Point.crossProduct(new Point(dx, dy, dz), upDirection);
+				module = left.getModule();
+				System.out.println("("+left.x+", "+left.y+", "+left.z+")");
+				left.divide(-module, -module, -module);
+				eyePos.move(stepSize*left.x, stepSize*left.y, stepSize*left.z);
 			break;
 			
 			case RIGHT:
-				x -= dz * stepSize;
-				z -= dx * stepSize;
+				Point right = Point.crossProduct(new Point(dx, dy, dz), upDirection);
+				module = right.getModule();
+				right.divide(module, module, module);
+				eyePos.move(stepSize*right.x, stepSize*right.y, stepSize*right.z);
 			break;
 		}
-	}
-	
-	public void moveForward(double stepSize) {
-		x += dx * stepSize;
-		z += dz * stepSize;
-	}
-	
-	public void moveBackward(double stepSize) {
-		x -= dx * stepSize;
-		z -= dz * stepSize;
 	}
 	
 	public void turn(double turnAngle, Direction direction) {
@@ -96,7 +90,7 @@ public class Camera {
 	
 	public String toString() {
 		return "Camera Info\n"
-			 + "  (x, z): ("+(x) + ", " + (z)+")\n"
+			 + "  (x, z): ("+(eyePos.x) + ", " + (eyePos.z)+")\n"
 			 + "  (dx, dz): ("+(dx) + ", " + (dz)+")\n"
 			 + "  horizontal angle: "+Math.toDegrees(hAngle)+"\n"
 			 + "  vertical angle: "+Math.toDegrees(vAngle);
