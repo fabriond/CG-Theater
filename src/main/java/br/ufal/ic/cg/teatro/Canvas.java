@@ -20,7 +20,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	double xAngle = 0.0;
 	double yAngle = 0.0;
 	double zAngle = 0.0;
-	double doorAngle = -7.0;
+	double doorAngle = 0.0;
 	
 	public Canvas(int width, int height, GLCapabilities capabilities) {
 		super(capabilities);
@@ -114,13 +114,13 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		
 		else if(e.getKeyCode() == KeyEvent.VK_R) {
 			System.out.println("R");
-			if(doorAngle < Math.toRadians(3994))
+			System.out.println(Math.toDegrees(doorAngle));
+			if(Math.toDegrees(doorAngle+1.7) < 5000)
 				doorAngle+=1.7;
 			
 		} else if(e.getKeyCode() == KeyEvent.VK_E) {
 			System.out.println("E");
-			System.out.println(Math.toDegrees(doorAngle));
-			if(doorAngle > Math.toRadians(-6137))
+			if(Math.toDegrees(doorAngle-1.7) > 390)
 				doorAngle-=1.7;
 		}
 		

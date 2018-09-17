@@ -19,7 +19,7 @@ public class MyGL extends DebugGL2{
 	ArrayList<Point> innerPlateauCutPoints = new ArrayList<>();
 	Point doorStart, doorEnd;
 	
-	private void drawCircularPart(double radius, double yMin, double yMax, double zMin, double zMax) {
+	private void drawCircularPart(double radius, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
 		Point prevLower = new Point(0, 0, 0);
 		Point prevHigher = new Point(0, 0, 0);
 		double yDiff = yMax - yMin;
@@ -73,6 +73,7 @@ public class MyGL extends DebugGL2{
 		glEnd();
 		drawCircularRoof();
 		drawPlateaus(yDiff, zDiff);
+		drawColumns(xMin, yMin, zMin, xMax, yMax, zMax);
 	}
 	
 	private void drawCircularRoof() {
@@ -115,7 +116,6 @@ public class MyGL extends DebugGL2{
 				glVertex3d(plateauPoints.get(1).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
 				for(Point p : plateauPoints) {
 					if(plateauCutPoints.contains(p) && !stopped) {
-						System.out.println("NOPE "+p);
 						glEnd();
 						stopped = true;
 					}
@@ -173,50 +173,102 @@ public class MyGL extends DebugGL2{
 		glVertex3d(p.x, p.y, p.z);
 	}
 	
-	private void drawOutside(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, GLUT glut) {
+	private void drawOutside(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double doorAngle, GLUT glut) {
 		double wallWidth = 5.0;
+		double doorSize = (xMax-xMin+(wallWidth+0.2)*2)/6;
 		glColor(255, 205, 210, 0.5);
 		//side walls
 		glPushMatrix();
 			glTranslated(xMin-(wallWidth+0.2)/2, (yMax-yMin)/2, zMin+(zMax-zMin)/2-(xMax - xMin)/4);
 			glPushMatrix();
-				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax - xMin)/2+(wallWidth*2));
+				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax - xMin)/2+wallWidth*1.15);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 
 			glPushMatrix();
 				glTranslated(xMax-xMin+(wallWidth+0.2), 0, 0);
-				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax - xMin)/2+wallWidth*2);
+				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax - xMin)/2+wallWidth*1.15);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 		glPopMatrix();
+		
 		//front and back walls
 		glPushMatrix();
 			glTranslated((xMax-xMin+(wallWidth+0.2)*2)/2+xMin-wallWidth, (yMax-yMin)/2, zMin-(xMax - xMin)/2 - wallWidth/2);
 			glPushMatrix();
-				glTranslated((xMax-xMin+(wallWidth+0.2)*2)/3.5-0.4, 0, 0);
-				glScaled((xMax-xMin+(wallWidth+0.2)*2)/3.5, yMax-yMin, wallWidth);
+				glTranslated((xMax-xMin+(wallWidth+0.2)*2)/(2*wallWidth/3-0.1), 0, wallWidth*1.15/2.0-0.4);
+				glScaled((xMax-xMin+(wallWidth+0.2)*2)/(2*wallWidth/3-0.1), yMax-yMin, wallWidth*1.15);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 			
 			glPushMatrix();
-				glTranslated(-(xMax-xMin+(wallWidth+0.2)*2)/3.5-0.4, 0, 0);
-				glScaled((xMax-xMin+(wallWidth+0.2)*2)/3.5, yMax-yMin, wallWidth);
+				glTranslated(-(xMax-xMin+(wallWidth+0.2)*2)/(2*wallWidth/3-0.1), 0, wallWidth*1.15/2.0-0.4);
+				glScaled((xMax-xMin+(wallWidth+0.2)*2)/(2*wallWidth/3-0.1), yMax-yMin, wallWidth*1.15);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 			
 			glPushMatrix();
-			glTranslated(0, (yMax-yMin)/8.08, 0);
-			glScaled((xMax-xMin+(wallWidth+0.2)*2)/3, (yMax-yMin)*3.0/4.0, wallWidth);
-			glut.glutSolidCube(1.0f);
+				glTranslated(0, (yMax-yMin)/8.08, wallWidth*0.5/2.0-0.4);
+				glScaled((xMax-xMin+(wallWidth+0.2)*2)/3, (yMax-yMin)-(yMax-yMin)/4, wallWidth*0.6);
+				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 
 			//back wall
 			glPushMatrix();
 				glTranslated(0, 0, zMax-zMin+(wallWidth+0.1) + (xMax-xMin)/2);
-				glScaled((xMax-xMin+(wallWidth+0.2)*2)/2, yMax-yMin, wallWidth);
+				glScaled((xMax-xMin+(wallWidth+0.2)*2), yMax-yMin, wallWidth);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
+			
+			glPushMatrix();
+				glTranslated(-doorSize, -(yMax-yMin)/2.0+(yMax-yMin)/8, wallWidth/2.5);
+				glRotated(doorAngle, 0, 1, 0);
+				glTranslated(doorSize/2, 0, 2);
+				glColor(215, 204, 200, 1.0);
+				glScaled(doorSize, (yMax-yMin)*3.0/11, 2);
+				glut.glutSolidCube(1.0f);
+			glPopMatrix();
+
+			glPushMatrix();
+				glTranslated(doorSize, -(yMax-yMin)/2.0+(yMax-yMin)/8, wallWidth/2.5);
+				glRotated(-doorAngle, 0, 1, 0);
+				glTranslated(-doorSize/2, 0, 2);
+				glColor(215, 204, 200, 1.0);
+				glScaled(doorSize, (yMax-yMin)*3.0/11, 2);
+				glut.glutSolidCube(1.0f);
+			glPopMatrix();
+		glPopMatrix();
+	}
+	
+	private void drawColumns(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+		GLUT glut = new GLUT();
+		Point p;
+		glPushMatrix();
+			glColor3d(1, 1, 1);
+			p = plateauPoints.get(1);
+			for(int i = 1; i < 5; ++i) {
+				glPushMatrix();
+					glTranslated(p.x-((zMax-zMin)/1.5)+18*i, (yMax-yMin)/2, p.z);
+					glRotated(90, 1, 0, 0);
+					glut.glutSolidCylinder(2.0, (yMax-yMin), 10, 1);
+				glPopMatrix();
+			}
+			for(int i = 1; i < plateauPoints.size(); i+=6) {
+				if(i > 13 && i < 25) continue;
+				glPushMatrix();
+					p = plateauPoints.get(i);
+					glTranslated(p.x, (yMax-yMin)/2, p.z);
+					glRotated(90, 1, 0, 0);
+					glut.glutSolidCylinder(2.0, (yMax-yMin), 10, 1);
+				glPopMatrix();
+			}
+			for(int i = 1; i < 5; ++i) {
+				glPushMatrix();
+					glTranslated(p.x-((zMax-zMin)/1.5)+18*i, (yMax-yMin)/2, p.z);
+					glRotated(90, 1, 0, 0);
+					glut.glutSolidCylinder(2.0, (yMax-yMin), 10, 1);
+				glPopMatrix();
+			}
 		glPopMatrix();
 	}
 	
@@ -224,8 +276,8 @@ public class MyGL extends DebugGL2{
 		
 		GLUT glut = new GLUT();
 
-		//drawOutside(xMin, yMin, zMin, xMax, yMax, zMax, glut);
-		
+		drawOutside(xMin, yMin, zMin, xMax, yMax, zMax, doorAngle, glut);
+
 		//glColor3d(1, 0, 0);
 		//glColor(234, 181, 67,1.0);
 		glColor(255, 236, 179,1.0);
@@ -291,31 +343,8 @@ public class MyGL extends DebugGL2{
 		//circular part (including stands and circular part of the roof)
 		glPushMatrix();
 			glTranslated(-zMin, 0.0, (xMax-xMin)/2 + xMin);
-			drawCircularPart((xMax - xMin)/2, yMin, yMax, zMin, zMax);
+			drawCircularPart((xMax - xMin)/2, xMin, xMax, yMin, yMax, zMin, zMax);
 		glPopMatrix();
-		/*
-		//left door
-		glPushMatrix();
-			glTranslated(-zMin, 0.0, (xMax-xMin)/2 + xMin);
-			glTranslated((doorEnd.x+doorStart.x)/2-2.5, (doorEnd.y+doorStart.y)/2, (doorEnd.z+doorStart.z)/2-doorStart.z);
-			glTranslated(0, 0, (doorEnd.z-doorStart.z)/2);
-			glRotated(doorAngle, 0, 1, 0);
-			glTranslated(0, 0, -(doorEnd.z-doorStart.z)/2);
-			glColor(215, 204, 200, 1.0);
-			glScaled((xMax-xMin)/50, doorEnd.y-doorStart.y, (doorEnd.z-doorStart.z));
-			glut.glutSolidCube(1.0f);
-		glPopMatrix();
-		//right door
-		glPushMatrix();
-			glTranslated(-zMin, 0.0, (xMax-xMin)/2 + xMin);
-			glTranslated((doorEnd.x+doorStart.x)/2-2.5, (doorEnd.y+doorStart.y)/2, (doorEnd.z+doorStart.z)/2+doorStart.z);
-			glTranslated(0, 0, -(doorEnd.z-doorStart.z)/2);
-			glRotated(-doorAngle, 0, 1, 0);
-			glTranslated(0, 0, (doorEnd.z-doorStart.z)/2);
-			glColor(215, 204, 200, 1.0);
-			glScaled((xMax-xMin)/50, doorEnd.y-doorStart.y, (doorEnd.z-doorStart.z));
-			glut.glutSolidCube(1.0f);
-		glPopMatrix();*/
 	}
 	
 }
