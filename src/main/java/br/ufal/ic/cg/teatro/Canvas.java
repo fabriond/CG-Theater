@@ -20,6 +20,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	double xAngle = 0.0;
 	double yAngle = 0.0;
 	double zAngle = 0.0;
+	double doorAngle = -7.0;
 	
 	public Canvas(int width, int height, GLCapabilities capabilities) {
 		super(capabilities);
@@ -27,6 +28,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		addGLEventListener(this);
 		addKeyListener(this);
 		camera = new Camera(150.0, 10.0, -100.0);
+		//camera = new Camera(0,10,-100);
 	}
 	
 	@Override
@@ -63,7 +65,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 			gl.glVertex3d(1000.0, 0.0, 1000.0);
 			gl.glVertex3d(-1000.0, 0.0, 1000.0);
 		gl.glEnd();
-		gl.drawTheater(100.0, 0.0, 100.0, 200.0, 100.0, 240.0);
+		gl.drawTheater(100.0, 0.0, 100.0, 200.0, 100.0, 240.0, doorAngle);
 		//gl.drawTheater(-5.0, -0.7, -7.0, 5.0, 9.3, 7.0);
 	}
 
@@ -108,7 +110,19 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		} else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			System.out.println(">");
 			camera.turn(0.05, Direction.RIGHT);
-		} 
+		}
+		
+		else if(e.getKeyCode() == KeyEvent.VK_R) {
+			System.out.println("R");
+			if(doorAngle < Math.toRadians(3994))
+				doorAngle+=1.7;
+			
+		} else if(e.getKeyCode() == KeyEvent.VK_E) {
+			System.out.println("E");
+			System.out.println(Math.toDegrees(doorAngle));
+			if(doorAngle > Math.toRadians(-6137))
+				doorAngle-=1.7;
+		}
 		
 		else if(e.getKeyCode() == KeyEvent.VK_X) {
 			System.out.println("D");
