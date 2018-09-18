@@ -314,9 +314,41 @@ public class MyGL extends DebugGL2{
 		glPopMatrix();
 	}
 	
+	public void drawInnerChair(GLUT glut) {
+		//chair back
+		glColor(255, 177, 66, 0.5);
+		glPushMatrix();
+			glTranslated(0, 5, 0);
+			glRotated(-10, 1, 0, 0);
+			glScaled(5, 10, 1.5);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		//chair seat
+		glPushMatrix();
+			glTranslated(0, 3, 2);
+			glRotated(90, 1, 0, 0);
+			glScaled(5, 8, 1.5);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		//chair sides
+		glColor(204, 142, 53,1.0);
+		glPushMatrix();
+			glTranslated(3, 3, 1.5);
+			glRotated(90, 0, 1, 0);
+			glScaled(5.75, 6, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(-3, 3, 1.5);
+			glRotated(90, 0, 1, 0);
+			glScaled(5.75, 6, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+	}
+	
 	public void drawTheater(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double doorAngle) {
 		
-		GLUT glut = new GLUT();
+		GLUT glut = new GLUT();		
 		
 		drawOutside(xMin, yMin, zMin, xMax, yMax, zMax, doorAngle, glut);
 
@@ -354,6 +386,7 @@ public class MyGL extends DebugGL2{
 			glVertex3d(xMax, yMax, zMax+(zMin-zMax)/4);
 		glEnd();
 		
+		//chandelier
 		glPushMatrix();
 			glTranslated((xMax-xMin)*1.5, yMax, (zMax-zMin));
 			glRotated(180, 1, 0, 1);
@@ -377,7 +410,20 @@ public class MyGL extends DebugGL2{
 				glut.glutSolidCone(7, 14, 4, 2);
 			glPopMatrix();
 		glPopMatrix();
-		
+		//draw chairs in inner audience
+		glPushMatrix();
+			glTranslated((xMax+xMin)/2-16, yMin, (zMax+zMin)/2);
+			for(int i = 0; i < 4; ++i) {
+				glPushMatrix();				
+				for(int j = 0; j < 5; ++j) {
+					drawInnerChair(glut);
+					glTranslated(8, 0, 0);
+				}
+				glPopMatrix();
+				glTranslated(0, 0, -12);
+			}
+			
+		glPopMatrix();		
 		//stage
 		glColor(121, 85, 72, 1.0);
 		glPushMatrix();
