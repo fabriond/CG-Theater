@@ -51,13 +51,13 @@ public class MyGL extends DebugGL2{
 				if(i >= -10 && i <= 20) {
 					//this is for the door space
 					if(i == -10) {
-						glVertex3d(prevLower.addToNewPoint(0.0, yDiff/4.0, 0.0));
+						glVertex3d(prevLower.addToNewPoint(0.0, yDiff/3.0, 0.0));
 						glVertex3d(prevHigher);
 						doorStart = new Point(x, yMin, z);
 					}
-					glVertex3d(x, yDiff/4.0 + yMin, z);
+					glVertex3d(x, yDiff/3.0 + yMin, z);
 					glVertex3d(x, yMax, z);	
-					if(i == 10) doorEnd = new Point(x, yDiff/4.0 + yMin, z);
+					if(i == 10) doorEnd = new Point(x, yDiff/3.0 + yMin, z);
 					if(i == 20) {
 						glVertex3d(x, yMin, z);
 						glVertex3d(x, yMax, z);
@@ -342,7 +342,7 @@ public class MyGL extends DebugGL2{
 		glPopMatrix();
 	}
 	
-	public void drawInnerChair(GLUT glut) {
+	private void drawInnerChair(GLUT glut) {
 		//chair back
 		glColor(255, 177, 66, 0.5);
 		glPushMatrix();
@@ -418,9 +418,7 @@ public class MyGL extends DebugGL2{
 			
 			glVertex3d(xMax, yMax, zMin-(xMax-xMin)/2);
 			glVertex3d(xMax, yMax, zMax);
-		glEnd();
-		
-		glColor(255, 205, 210, 0.5);		
+		glEnd();		
 		
 		//stage curtain
 		glColor(198, 40, 40, 1.0);
@@ -456,6 +454,7 @@ public class MyGL extends DebugGL2{
 				glut.glutSolidCone(7, 14, 4, 2);
 			glPopMatrix();
 		glPopMatrix();
+		
 		//draw chairs in inner audience
 		glPushMatrix();
 			glTranslated((xMax+xMin)/2-16, yMin, (zMax+zMin)/2);
@@ -468,8 +467,8 @@ public class MyGL extends DebugGL2{
 				glPopMatrix();
 				glTranslated(0, 0, -12);
 			}
-			
-		glPopMatrix();		
+		glPopMatrix();
+		
 		//stage
 		glColor(121, 85, 72, 1.0);
 		glPushMatrix();

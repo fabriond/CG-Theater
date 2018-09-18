@@ -89,6 +89,7 @@ public class Camera {
 			break;
 			
 			case DOWN:
+				if(eyePos.y >= 0)
 				eyePos.move(0, -stepSize, 0);
 			break;
 			

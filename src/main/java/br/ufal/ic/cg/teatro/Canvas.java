@@ -3,6 +3,8 @@ package br.ufal.ic.cg.teatro;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JSlider;
+
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLCapabilities;
@@ -20,6 +22,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	double xAngle = 0.0;
 	double yAngle = 0.0;
 	double zAngle = 0.0;
+	JSlider doorSlider;
 	double doorAngle = 0.0;
 	
 	public Canvas(int width, int height, GLCapabilities capabilities) {
@@ -123,14 +126,18 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		
 		else if(e.getKeyCode() == KeyEvent.VK_R) {
 			System.out.println("R");
-			System.out.println(Math.toDegrees(doorAngle));
-			if(Math.toDegrees(doorAngle+1.7) < 5000)
-				doorAngle+=1.7;
-			
+			System.out.println(doorAngle);
+			if(doorAngle+1.5 < 90.0) {
+				doorAngle+=1.5;
+				doorSlider.setValue((int) doorAngle*100);
+			}
 		} else if(e.getKeyCode() == KeyEvent.VK_E) {
 			System.out.println("E");
-			if(Math.toDegrees(doorAngle-1.7) > 390)
-				doorAngle-=1.7;
+			System.out.println(doorAngle);
+			if(doorAngle-1.5 > 0.0) {
+				doorAngle-=1.5;
+				doorSlider.setValue((int) doorAngle*100);
+			}
 		}
 		
 		else if(e.getKeyCode() == KeyEvent.VK_X) {
@@ -147,6 +154,16 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		display();		
 	}
 
+	public void setDoorAngle(double newAngle) {
+		doorAngle = newAngle;
+		if(doorAngle > 90.0) doorAngle = 90.0;
+		else if(doorAngle < 0) doorAngle = 0.0;
+	}
+	
+	public void setDoorSlider(JSlider doorSlider) {
+		this.doorSlider = doorSlider;
+	}
+	
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
