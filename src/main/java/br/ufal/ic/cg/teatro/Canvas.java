@@ -58,6 +58,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		gl.glRotated(zAngle, 0, 1, camera.getCenterZ());
 		
 		//draw Ground
+		//gl.glColor(51, 217, 178, 1.0);
 		gl.glColor(25, 42, 86, 1.0);
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glVertex3d(-1000.0, 0.0, -1000.0);

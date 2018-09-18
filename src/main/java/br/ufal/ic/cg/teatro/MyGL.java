@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jogamp.opengl.DebugGL2;
 import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 public class MyGL extends DebugGL2{
@@ -24,7 +25,7 @@ public class MyGL extends DebugGL2{
 		Point prevHigher = new Point(0, 0, 0);
 		double yDiff = yMax - yMin;
 		double zDiff = zMax - zMin;
-		double yPlateau = yDiff*2/4 + yMin;
+		double yPlateau = yDiff*2/3 + yMin;
 		roofPoints.add(new Point(0.0, yMax, 0.0));
 		glBegin(GL_QUAD_STRIP);
 			for(int i = -90; i <= 90; i+=10){
@@ -105,11 +106,11 @@ public class MyGL extends DebugGL2{
 							glVertex3d(plateauPoints.get(plateauPoints.size()-2).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
 							glVertex3d(plateauPoints.get(plateauPoints.size()-1).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
 						glEnd();
-						glTranslated(0, -yDiff/4.0, 0);
+						glTranslated(0, -yDiff/3.0, 0);
 					}
 				glPopMatrix();
 			}
-			glTranslated(0.0, -2*yDiff/4.0, 0.0);
+			glTranslated(0.0, -2*yDiff/3.0, 0.0);
 			boolean stopped = false;
 			glBegin(GL_QUAD_STRIP);
 				glVertex3d(plateauPoints.get(0).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
@@ -140,7 +141,7 @@ public class MyGL extends DebugGL2{
 					glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-2).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
 					glVertex3d(innerPlateauPoints.get(innerPlateauPoints.size()-1).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
 				glEnd();
-				glTranslated(0, -yDiff/4.0, 0);
+				glTranslated(0, -yDiff/3.0, 0);
 			}
 			stopped = false;
 			glBegin(GL_QUAD_STRIP);
@@ -242,31 +243,73 @@ public class MyGL extends DebugGL2{
 	
 	private void drawColumns(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		GLUT glut = new GLUT();
-		Point p;
+		Point p, aux;
 		glPushMatrix();
-			glColor3d(1, 1, 1);
+			glColor(44, 62, 80, 0.1);
+			//glColor(44, 44, 84, 0.5);
 			p = plateauPoints.get(1);
-			for(int i = 1; i < 5; ++i) {
+			for(int i = 2; i < 5; ++i) {
+				if(i != 3) {
+					glPushMatrix();
+						glTranslated(p.x-((zMax-zMin)/1.5)+18*i, yMin, p.z);
+						glRotated(-90, 1, 0, 0);
+						glut.glutSolidCylinder(1.0, (yMax-yMin), 10, 1);
+					glPopMatrix();
+				}
 				glPushMatrix();
-					glTranslated(p.x-((zMax-zMin)/1.5)+18*i, (yMax-yMin)/2, p.z);
-					glRotated(90, 1, 0, 0);
-					glut.glutSolidCylinder(2.0, (yMax-yMin), 10, 1);
+				glColor(255, 255, 255,1.0);
+					for(int j = 0; j < 2; ++j) {
+						glTranslated(0, (yMax-yMin)/3.0, 0);
+						glPushMatrix();
+							glTranslated((p.x-((zMax-zMin)/1.5)+18*(i-1)) + 9*(i-1), yMin, p.z*(3.0/2.5));
+							glut.glutSolidSphere(2.5, 10, 10);
+						glPopMatrix();
+					}
+				glColor(44, 62, 80, 0.1);
 				glPopMatrix();
+				
 			}
 			for(int i = 1; i < plateauPoints.size(); i+=6) {
 				if(i > 13 && i < 25) continue;
 				glPushMatrix();
 					p = plateauPoints.get(i);
-					glTranslated(p.x, (yMax-yMin)/2, p.z);
-					glRotated(90, 1, 0, 0);
-					glut.glutSolidCylinder(2.0, (yMax-yMin), 10, 1);
+					glTranslated(p.x, yMin, p.z);
+					glRotated(-90, 1, 0, 0);
+					glut.glutSolidCylinder(1.0, (yMax-yMin), 10, 1);
+				glPopMatrix();
+				glPushMatrix();
+				glColor(255, 255, 255,1.0);
+					for(int j = 0; j < 2; ++j) {
+						if(i > 3 && i != 25) {
+							glPushMatrix();
+								aux = plateauPoints.get(i-3);
+								glTranslated(aux.x*1.7/2, yMin+(yMax-yMin)/3.0+0.5, aux.z*1.7/2);
+								glut.glutSolidSphere(2.5, 10, 10);
+							glPopMatrix();
+							glTranslated(0, (yMax-yMin)/3.0, 0);
+						}
+					}
+				glColor(44, 62, 80, 0.1);
 				glPopMatrix();
 			}
-			for(int i = 1; i < 5; ++i) {
+			for(int i = 2; i < 5; ++i) {
+				if(i != 3) {
+					glPushMatrix();
+						glTranslated(p.x-((zMax-zMin)/1.5)+18*i, yMin, p.z);
+						glRotated(-90, 1, 0, 0);
+						glut.glutSolidCylinder(1.0, (yMax-yMin), 10, 1);
+					glPopMatrix();
+				}
 				glPushMatrix();
-					glTranslated(p.x-((zMax-zMin)/1.5)+18*i, (yMax-yMin)/2, p.z);
-					glRotated(90, 1, 0, 0);
-					glut.glutSolidCylinder(2.0, (yMax-yMin), 10, 1);
+				glColor(255, 255, 255,1.0);
+					for(int j = 0; j < 2; ++j) {
+						glTranslated(0, (yMax-yMin)/3.0, 0);
+						glPushMatrix();
+							glTranslated((p.x-((zMax-zMin)/1.5)+18*(i-1)) + 9*(i-1), yMin, p.z*(3.0/2.5));
+							glut.glutSolidSphere(2.5, 10, 10);
+						glPopMatrix();
+					}
+				glColor(44, 62, 80, 0.1);
 				glPopMatrix();
 			}
 		glPopMatrix();
@@ -275,7 +318,7 @@ public class MyGL extends DebugGL2{
 	public void drawTheater(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double doorAngle) {
 		
 		GLUT glut = new GLUT();
-
+		
 		drawOutside(xMin, yMin, zMin, xMax, yMax, zMax, doorAngle, glut);
 
 		//glColor3d(1, 0, 0);
