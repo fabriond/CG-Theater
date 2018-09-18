@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.jogamp.opengl.DebugGL2;
 import com.jogamp.opengl.GL2;
-import com.jogamp.opengl.glu.GLU;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 public class MyGL extends DebugGL2{
@@ -355,6 +354,30 @@ public class MyGL extends DebugGL2{
 			glVertex3d(xMax, yMax, zMax+(zMin-zMax)/4);
 		glEnd();
 		
+		glPushMatrix();
+			glTranslated((xMax-xMin)*1.5, yMax, (zMax-zMin));
+			glRotated(180, 1, 0, 1);
+			glColor(255, 177, 66, 1.0);
+			glPushMatrix();
+				glRotated(45, 1, 0, 1);
+				glut.glutSolidCube(3.0f);
+			glPopMatrix();
+			glTranslated(0, Math.sqrt(3.0*3.0*3)-1.5, 0);
+			glPushMatrix();
+				glRotated(45, 1, 0, 0);
+				glRotated(-45, 0, 0, 1);
+				glut.glutSolidCube(3.0f);
+			glPopMatrix();
+			glTranslated(0, 14, 0);
+			glColor(255, 255, 255, 1.0);
+			glPushMatrix();
+				glRotated(90, 1, 0, 0);
+				glut.glutSolidCone(7, 14, 4, 2);
+				glRotated(180, 0, 1, 0);
+				glut.glutSolidCone(7, 14, 4, 2);
+			glPopMatrix();
+		glPopMatrix();
+		
 		//stage
 		glColor(121, 85, 72, 1.0);
 		glPushMatrix();
@@ -365,16 +388,34 @@ public class MyGL extends DebugGL2{
 			glPopMatrix();
 		glPopMatrix();
 		
-		glColor(215, 204, 200,1.0);
 		//left column
 		glPushMatrix();
-			glTranslated(xMax-(xMax-xMin)/10, yMin+yMax/2, zMax-2*(zMax-zMin)/10);
+			glTranslated(xMax-(xMax-xMin)/10, (yMin+yMax)/2, zMax-(zMax-zMin)/5);
+			//left sound box
+			glPushMatrix();
+				glColor(0, 0, 0,1.0);
+				glTranslated(-(xMax-xMin)/1.4, (yMax-yMin)/7.5+5.0-(yMin+yMax)/2, -(zMax-zMin)/5-0.3);
+				glScaled((xMax-xMin)/9-0.3, (yMax-yMin)/6, (zMax-zMin)/20-0.3);
+				glRotated(45, 0, 1, 0);
+				glut.glutSolidCube(1.0f);
+				glColor(215, 204, 200,1.0);
+			glPopMatrix();
 			glScaled((xMax-xMin)/5-0.3, yMax-0.3, 2*(zMax-zMin)/5-0.3);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
+		
 		//right column
 		glPushMatrix();
 			glTranslated(xMin+(xMax-xMin)/10, yMin+yMax/2, zMax-2*(zMax-zMin)/10);
+			//right sound box
+			glPushMatrix();
+				glColor(0, 0, 0,1.0);
+				glTranslated((xMax-xMin)/1.4, (yMax-yMin)/7.5+5.0-(yMin+yMax)/2, -(zMax-zMin)/5-0.3);
+				glScaled((xMax-xMin)/9-0.3, (yMax-yMin)/6, (zMax-zMin)/20-0.3);
+				glRotated(-45, 0, 1, 0);
+				glut.glutSolidCube(1.0f);
+				glColor(215, 204, 200,1.0);
+			glPopMatrix();
 			glScaled((xMax-xMin)/5-0.3, yMax-0.3, 2*(zMax-zMin)/5-0.3);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
