@@ -82,6 +82,21 @@ public class Camera {
 		turnCam();
 	}
 	
+	public void fly(double stepSize, Direction direction) {
+		switch(direction) {
+			case UP:
+				eyePos.move(0, stepSize, 0);
+			break;
+			
+			case DOWN:
+				eyePos.move(0, -stepSize, 0);
+			break;
+			
+			default:
+			break;			
+		}
+	}
+	
 	private void turnCam() {
 		dx = Math.sin(hAngle);
 		dy = Math.sin(vAngle);

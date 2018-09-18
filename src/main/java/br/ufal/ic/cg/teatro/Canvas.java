@@ -99,6 +99,14 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 			camera.move(fraction, Direction.RIGHT);
 		} 
 		
+		else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+			System.out.println("A");
+			camera.fly(fraction, Direction.UP);
+		} else if(e.getKeyCode() == KeyEvent.VK_V) {
+			System.out.println("D");
+			camera.fly(fraction, Direction.DOWN);
+		} 
+		
 		else if(e.getKeyCode() == KeyEvent.VK_UP) {
 			System.out.println("^");
             camera.turn(0.05, Direction.UP);

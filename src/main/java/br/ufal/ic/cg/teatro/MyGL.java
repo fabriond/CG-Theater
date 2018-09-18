@@ -206,20 +206,48 @@ public class MyGL extends DebugGL2{
 				glScaled((xMax-xMin+(wallWidth+0.2)*2)/(2*wallWidth/3-0.1), yMax-yMin, wallWidth*1.15);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
-			
+			//center front wall
 			glPushMatrix();
 				glTranslated(0, (yMax-yMin)/8.08, wallWidth*0.5/2.0-0.4);
-				glScaled((xMax-xMin+(wallWidth+0.2)*2)/3, (yMax-yMin)-(yMax-yMin)/4, wallWidth*0.6);
-				glut.glutSolidCube(1.0f);
-			glPopMatrix();
-
-			//back wall
-			glPushMatrix();
-				glTranslated(0, 0, zMax-zMin+(wallWidth+0.1) + (xMax-xMin)/2);
-				glScaled((xMax-xMin+(wallWidth+0.2)*2), yMax-yMin, wallWidth);
+				glPushMatrix();
+					glScaled((xMax-xMin+(wallWidth+0.2)*2)/3, (yMax-yMin)-(yMax-yMin)/4, wallWidth*0.6);
+					glut.glutSolidCube(1.0f);
+				glPopMatrix();
+				glTranslated(0, (yMax+yMin)/3, wallWidth*0.022);
+				glRotated(45, 0, 0, 1);
+				glScaled((xMax-xMin)/1.3, (yMax-yMin)/1.3, wallWidth*0.61);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 			
+			//back wall
+			glPushMatrix();
+				glTranslated(-0.23, (yMax-yMin)*0.05, zMax-zMin+(wallWidth+0.1) + (xMax-xMin)/2 + wallWidth*10);
+				glPushMatrix();
+					glScaled((xMax-xMin+(wallWidth+0.1)*2)*1.2, (yMax-yMin)*1.1, wallWidth*20);
+					glut.glutSolidCube(1.0f);
+				glPopMatrix();
+				//roof pieces
+				glTranslated(0, (yMax+yMin)*1.1/2, wallWidth*9.5);
+				glPushMatrix();
+					glRotated(45, 0, 0, 1);
+					glScaled((xMax-xMin)/1.15, (yMax-yMin)/1.15, wallWidth);
+					glut.glutSolidCube(1.0f);
+				glPopMatrix();
+				glPushMatrix();
+					glTranslated(0, 0, -18.5*wallWidth);
+					glRotated(45, 0, 0, 1);
+					glScaled((xMax-xMin)/1.2, (yMax-yMin)/1.2, wallWidth);
+					glut.glutSolidCube(1.0f);
+				glPopMatrix();
+				glColor(225, 112, 85,1.0);
+				glTranslated(0,0,-wallWidth*9.5);
+				glRotated(45, 0, 0, 1);
+				glScaled((xMax-xMin)/1.17, (yMax-yMin)/1.17, wallWidth*18);
+				glut.glutSolidCube(1.0f);
+				//roof pieces end here
+			glPopMatrix();
+			
+			//doors
 			glPushMatrix();
 				glTranslated(-doorSize, -(yMax-yMin)/2.0+(yMax-yMin)/8, wallWidth/2.5);
 				glRotated(doorAngle, 0, 1, 0);
@@ -368,15 +396,33 @@ public class MyGL extends DebugGL2{
 			
 			glVertex3d(xMax, yMax, zMin);
 			glVertex3d(xMax, yMin, zMin);
-		glEnd();
+		glEnd();		
 		
-		//regular roof
+		//inner roof
 		glBegin(GL_QUADS);
 			glVertex3d(xMin, yMax, zMax);
 			glVertex3d(xMax, yMax, zMax);
 			glVertex3d(xMax, yMax, zMin);
 			glVertex3d(xMin, yMax, zMin);
 		glEnd();
+		
+		
+		//outer roof
+		glColor(225, 112, 85,1.0);
+		glBegin(GL_QUAD_STRIP);
+			glVertex3d(xMin, yMax, zMin-(xMax-xMin)/2);
+			glVertex3d(xMin, yMax, zMax);
+			
+			glVertex3d((xMax+xMin)/2, yMax*1.5, zMin-(xMax-xMin)/2);
+			glVertex3d((xMax+xMin)/2, yMax*1.5, zMax);
+			
+			glVertex3d(xMax, yMax, zMin-(xMax-xMin)/2);
+			glVertex3d(xMax, yMax, zMax);
+		glEnd();
+		
+		glColor(255, 205, 210, 0.5);		
+		
+		//stage curtain
 		glColor(198, 40, 40, 1.0);
 		glBegin(GL_QUADS);
 			glVertex3d(xMin, yMax, zMax+(zMin-zMax)/4);
@@ -388,7 +434,7 @@ public class MyGL extends DebugGL2{
 		
 		//chandelier
 		glPushMatrix();
-			glTranslated((xMax-xMin)*1.5, yMax, (zMax-zMin));
+			glTranslated((xMax-xMin)*1.5, yMax-Math.sqrt(3.0*3.0*3), (zMax-zMin));
 			glRotated(180, 1, 0, 1);
 			glColor(255, 177, 66, 1.0);
 			glPushMatrix();
