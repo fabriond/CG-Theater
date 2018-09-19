@@ -19,9 +19,6 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	private static final long serialVersionUID = 1L;
 	
 	Camera camera;
-	double xAngle = 0.0;
-	double yAngle = 0.0;
-	double zAngle = 0.0;
 	JSlider doorSlider;
 	double doorAngle = 0.0;
 	
@@ -55,10 +52,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		gl.glLoadIdentity();
 		
 		camera.setLookAt(GLU.createGLU(gl));
-		System.out.println(camera);
-		gl.glRotated(xAngle, 1, 0, 0);
-		gl.glRotated(yAngle, 0, 1, 0);
-		gl.glRotated(zAngle, 0, 1, camera.getCenterZ());
+		//System.out.println(camera);
 		
 		//draw Ground
 		//gl.glColor(51, 217, 178, 1.0);
@@ -89,66 +83,41 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	public void keyPressed(KeyEvent e) {
 		double fraction = 5;
 		if(e.getKeyCode() == KeyEvent.VK_W) {
-			System.out.println("W");
 			camera.move(fraction, Direction.UP);
 		} else if(e.getKeyCode() == KeyEvent.VK_S) {
-			System.out.println("S");
 			camera.move(fraction, Direction.DOWN);
 		} else if(e.getKeyCode() == KeyEvent.VK_A) {
-			System.out.println("A");
 			camera.move(fraction, Direction.LEFT);
 		} else if(e.getKeyCode() == KeyEvent.VK_D) {
-			System.out.println("D");
 			camera.move(fraction, Direction.RIGHT);
 		} 
 		
 		else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-			System.out.println("A");
 			camera.fly(fraction, Direction.UP);
 		} else if(e.getKeyCode() == KeyEvent.VK_V) {
-			System.out.println("D");
 			camera.fly(fraction, Direction.DOWN);
 		} 
 		
 		else if(e.getKeyCode() == KeyEvent.VK_UP) {
-			System.out.println("^");
             camera.turn(0.05, Direction.UP);
 		} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-			System.out.println("v");
 			camera.turn(0.05, Direction.DOWN);
 		} else if(e.getKeyCode() == KeyEvent.VK_LEFT) {
-			System.out.println("<");
             camera.turn(0.05, Direction.LEFT);
 		} else if(e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			System.out.println(">");
 			camera.turn(0.05, Direction.RIGHT);
 		}
 		
 		else if(e.getKeyCode() == KeyEvent.VK_R) {
-			System.out.println("R");
-			System.out.println(doorAngle);
 			if(doorAngle+1.5 < 90.0) {
 				doorAngle+=1.5;
 				doorSlider.setValue((int) doorAngle*100);
 			}
 		} else if(e.getKeyCode() == KeyEvent.VK_E) {
-			System.out.println("E");
-			System.out.println(doorAngle);
 			if(doorAngle-1.5 > 0.0) {
 				doorAngle-=1.5;
 				doorSlider.setValue((int) doorAngle*100);
 			}
-		}
-		
-		else if(e.getKeyCode() == KeyEvent.VK_X) {
-			System.out.println("D");
-			xAngle-=0.7;
-		} else if(e.getKeyCode() == KeyEvent.VK_Y) {
-			System.out.println("D");
-			yAngle-=0.7;
-		} else if(e.getKeyCode() == KeyEvent.VK_Z) {
-			System.out.println("D");
-			zAngle-=0.7;
 		}
 		
 		display();		

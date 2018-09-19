@@ -87,7 +87,7 @@ public class MyGL extends DebugGL2{
 	public void glColor(double r, double g, double b, double a) {
 		glColor4d(r/255, g/255, b/255, a);
 	}
-	
+
 	private void drawPlateaus(double yDiff, double zDiff) {
 		//glColor3d(0, 1, 0);
 		//glColor(204, 142, 53, 1.0);
@@ -169,7 +169,7 @@ public class MyGL extends DebugGL2{
 		glPopMatrix();		
 	}
 	
-	void glVertex3d(Point p) {
+	public void glVertex3d(Point p) {
 		glVertex3d(p.x, p.y, p.z);
 	}
 	
@@ -482,13 +482,13 @@ public class MyGL extends DebugGL2{
 		glColor(225, 112, 85,1.0);
 		glBegin(GL_QUAD_STRIP);
 			glVertex3d(xMin, yMax, zMin-(xMax-xMin)/2);
-			glVertex3d(xMin, yMax, zMax);
+			glVertex3d(xMin, yMax, zMax+zMin/2);
 			
 			glVertex3d((xMax+xMin)/2, yMax*1.5, zMin-(xMax-xMin)/2);
-			glVertex3d((xMax+xMin)/2, yMax*1.5, zMax);
+			glVertex3d((xMax+xMin)/2, yMax*1.5, zMax+zMin/2);
 			
 			glVertex3d(xMax, yMax, zMin-(xMax-xMin)/2);
-			glVertex3d(xMax, yMax, zMax);
+			glVertex3d(xMax, yMax, zMax+zMin/2);
 		glEnd();		
 		
 		//stage curtain
