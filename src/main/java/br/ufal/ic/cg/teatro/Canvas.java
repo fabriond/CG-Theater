@@ -75,7 +75,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		gl.glLoadIdentity();
 		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
 		GLU glu = GLU.createGLU(gl);
-		glu.gluPerspective(45.0, drawable.getSurfaceWidth() / drawable.getSurfaceHeight(), 0.1, 10000.0);
+		glu.gluPerspective(45.0, (double) drawable.getSurfaceWidth() / drawable.getSurfaceHeight(), 0.1, 10000.0);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 	}
 

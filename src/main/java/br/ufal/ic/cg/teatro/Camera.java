@@ -45,7 +45,6 @@ public class Camera {
 			case LEFT:
 				Point left = Point.crossProduct(new Point(dx, dy, dz), upDirection);
 				module = left.getModule();
-				System.out.println("("+left.x+", "+left.y+", "+left.z+")");
 				left.divide(-module, -module, -module);
 				eyePos.move(stepSize*left.x, stepSize*left.y, stepSize*left.z);
 			break;
@@ -89,8 +88,8 @@ public class Camera {
 			break;
 			
 			case DOWN:
-				if(eyePos.y >= 0)
-				eyePos.move(0, -stepSize, 0);
+				if(eyePos.y >= 15.0)
+					eyePos.move(0, -stepSize, 0);
 			break;
 			
 			default:

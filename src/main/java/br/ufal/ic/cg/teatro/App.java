@@ -40,7 +40,6 @@ public class App {
 			}
 		});
 		doorSlider.setSize(-1, -1);
-		System.out.println(doorSlider.getSize());
 		doorSlider.setMinimum(0);
 		doorSlider.setMajorTickSpacing(1500);
 		doorSlider.setMaximum(9000);
@@ -50,13 +49,13 @@ public class App {
 		jpanel.add(new JLabel(" "));
 		jpanel.setLayout(new BoxLayout(jpanel, BoxLayout.Y_AXIS));
 		canvas.setDoorSlider(doorSlider);
-		System.out.println(jpanel.getComponentOrientation().isLeftToRight());
+		jframe.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		jframe.add(jpanel);
 		jframe.pack();
 		jframe.setLocation(0, 0);
 		jframe.addKeyListener(canvas);
 		jframe.getContentPane().add(canvas);
-        jframe.setSize(width, height);
+        //jframe.setSize(width, height);
         jframe.setVisible(true);
         jframe.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowevent) {
