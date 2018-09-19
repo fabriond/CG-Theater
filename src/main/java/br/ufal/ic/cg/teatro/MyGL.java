@@ -284,14 +284,20 @@ public class MyGL extends DebugGL2{
 					glPopMatrix();
 				}
 				glPushMatrix();
-				glColor(255, 255, 255,1.0);
+					glTranslated((p.x-((zMax-zMin)/1.5)+18*(i-1)) + 9*(i-1), yMin, p.z*(3.0/2.5));
 					for(int j = 0; j < 2; ++j) {
+						glColor(255, 255, 255,1.0);
 						glTranslated(0, (yMax-yMin)/3.0, 0);
 						glPushMatrix();
-							glTranslated((p.x-((zMax-zMin)/1.5)+18*(i-1)) + 9*(i-1), yMin, p.z*(3.0/2.5));
 							glut.glutSolidSphere(2.5, 10, 10);
+							glTranslated(0, 4, 0);
+							drawPlateauChair(glut);
 						glPopMatrix();
 					}
+					glTranslated(0, -2*(yMax-yMin)/3, 0);
+					glTranslated(0, 4, 0);
+					drawPlateauChair(glut);
+					glColor(44, 62, 80, 0.1);
 				glColor(44, 62, 80, 0.1);
 				glPopMatrix();
 				
@@ -305,16 +311,25 @@ public class MyGL extends DebugGL2{
 					glut.glutSolidCylinder(1.0, (yMax-yMin), 10, 1);
 				glPopMatrix();
 				glPushMatrix();
-				glColor(255, 255, 255,1.0);
-					for(int j = 0; j < 2; ++j) {
-						if(i > 3 && i != 25) {
+					if(i > 3 && i != 25) {
+						aux = plateauPoints.get(i-3);
+						for(int j = 0; j < 2; ++j) {
+							glColor(255, 255, 255,1.0);
 							glPushMatrix();
-								aux = plateauPoints.get(i-3);
 								glTranslated(aux.x*1.7/2, yMin+(yMax-yMin)/3.0+0.5, aux.z*1.7/2);
 								glut.glutSolidSphere(2.5, 10, 10);
+								glTranslated(0, 4, 0);
+								glRotated(-50, 0, 1, 0);
+								if(i > 25) glRotated(255, 0, 1, 0);
+								drawPlateauChair(glut);
 							glPopMatrix();
 							glTranslated(0, (yMax-yMin)/3.0, 0);
 						}
+						glTranslated(aux.x*1.7/2, -2*(yMax-yMin)/3, aux.z*1.7/2);
+						glTranslated(0, 4, 0);
+						glRotated(-50, 0, 1, 0);
+						if(i > 25) glRotated(255, 0, 1, 0);
+						drawPlateauChair(glut);
 					}
 				glColor(44, 62, 80, 0.1);
 				glPopMatrix();
@@ -328,15 +343,22 @@ public class MyGL extends DebugGL2{
 					glPopMatrix();
 				}
 				glPushMatrix();
-				glColor(255, 255, 255,1.0);
+					glTranslated((p.x-((zMax-zMin)/1.5)+18*(i-1)) + 9*(i-1), yMin, p.z*(3.0/2.5));
 					for(int j = 0; j < 2; ++j) {
+						glColor(255, 255, 255,1.0);
 						glTranslated(0, (yMax-yMin)/3.0, 0);
 						glPushMatrix();
-							glTranslated((p.x-((zMax-zMin)/1.5)+18*(i-1)) + 9*(i-1), yMin, p.z*(3.0/2.5));
 							glut.glutSolidSphere(2.5, 10, 10);
+							glTranslated(0, 4, 0);
+							glRotated(180, 0, 1, 0);
+							drawPlateauChair(glut);
 						glPopMatrix();
 					}
-				glColor(44, 62, 80, 0.1);
+					glTranslated(0, -2*(yMax-yMin)/3, 0);
+					glTranslated(0, 4, 0);
+					glRotated(180, 0, 1, 0);
+					drawPlateauChair(glut);
+					glColor(44, 62, 80, 0.1);
 				glPopMatrix();
 			}
 		glPopMatrix();
@@ -374,9 +396,58 @@ public class MyGL extends DebugGL2{
 		glPopMatrix();
 	}
 	
+	public void drawPlateauChair(GLUT glut) {
+		glColor(255, 177, 66, 0.5);
+		//chair seat
+		glPushMatrix();
+			glTranslated(0, 4, 1.75);
+			glRotated(90, 1, 0, 0);
+			glScaled(5, 4.5, 1.5);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		//draw chair back sides
+		glColor(204, 142, 53,1.0);
+		glPushMatrix();
+			glTranslated(-2, 5, -1);
+			glScaled(1, 10, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(2, 5, -1);
+			glScaled(1, 10, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		//draw chair back top
+		glPushMatrix();
+			glTranslated(0, 9.5, -1);
+			glScaled(5, 1, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		//chair legs front
+		glPushMatrix();
+			glTranslated(-2, 1.75, 3.5);
+			glScaled(1, 3, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(2, 1.75, 3.5);
+			glScaled(1, 3, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+		//chair back
+		glColor(230, 238, 156, 1.0);
+		glPushMatrix();
+			glTranslated(0, 7.375, 0);
+			glScaled(5, 5.25, 1);
+			glut.glutSolidCube(1.0f);
+		glPopMatrix();
+	}
+	
 	public void drawTheater(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double doorAngle) {
 		
 		GLUT glut = new GLUT();		
+				
+		
 		
 		drawOutside(xMin, yMin, zMin, xMax, yMax, zMax, doorAngle, glut);
 
@@ -467,6 +538,11 @@ public class MyGL extends DebugGL2{
 				glPopMatrix();
 				glTranslated(0, 0, -12);
 			}
+		glPopMatrix();
+
+		//draw chairs in outer audience
+		glPushMatrix();
+			
 		glPopMatrix();
 		
 		//stage
