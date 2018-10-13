@@ -2,6 +2,9 @@ package br.ufal.ic.cg.teatro;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 
 import javax.swing.JSlider;
 
@@ -35,7 +38,26 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		drawable.setGL(new MyGL(gl));
+		gl.glShadeModel(GL2.GL_SMOOTH);		
 		gl.glEnable(GL2.GL_DEPTH_TEST);
+		gl.glEnable(GL2.GL_COLOR_MATERIAL);
+		
+		float ambientLight[] = { 0.6f, 0.6f, 0.6f, 0.5f };// 0.5
+		float diffuseLight[] = { 0.15f, 0.15f, 0.15f, 0.5f };// 0.8
+		float specularLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };// 0.3
+		float lightPos[] = {150.0f, 500.0f, -70.0f, 1.0f};
+		
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, FloatBuffer.wrap(ambientLight));
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, FloatBuffer.wrap(diffuseLight));
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, FloatBuffer.wrap(specularLight));
+	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, FloatBuffer.wrap(lightPos));
+		
+		gl.glEnable(GL2.GL_LIGHTING);
+		gl.glEnable(GL2.GL_LIGHT0);
+		gl.glEnable(GL2.GL_LIGHT1);
+		gl.glEnable(GL2.GL_LIGHT2);
+		gl.glEnable(GL2.GL_TEXTURE_2D);
+
 		gl.glClearColor(0.0f, 0.7f, 1.0f, 1.0f);
 	}
 
@@ -48,7 +70,6 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	public void display(GLAutoDrawable drawable) {
 		MyGL gl = new MyGL(drawable.getGL().getGL2());
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-		
 		gl.glLoadIdentity();
 		
 		camera.setLookAt(GLU.createGLU(gl));
@@ -65,6 +86,8 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		gl.glEnd();
 		gl.drawTheater(100.0, 0.0, 100.0, 200.0, 100.0, 240.0, doorAngle);
 		//gl.drawTheater(-5.0, -0.7, -7.0, 5.0, 9.3, 7.0);
+		gl.glFlush();
+		gl.glDisable(GL2.GL_TEXTURE_2D);
 	}
 
 	@Override
