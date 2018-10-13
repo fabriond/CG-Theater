@@ -2,8 +2,6 @@ package br.ufal.ic.cg.teatro;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import javax.swing.JSlider;
