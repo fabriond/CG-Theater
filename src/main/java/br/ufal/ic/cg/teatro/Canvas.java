@@ -2,8 +2,9 @@ package br.ufal.ic.cg.teatro;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.nio.FloatBuffer;
-
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JSlider;
 
 import com.jogamp.opengl.GL2;
@@ -12,6 +13,8 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.glu.GLU;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
 
 import br.ufal.ic.cg.teatro.Camera.Direction;
 
@@ -22,6 +25,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	Camera camera;
 	JSlider doorSlider;
 	double doorAngle = 0.0;
+	Map<String, Texture> textures = new HashMap<>();
 	
 	public Canvas(int width, int height, GLCapabilities capabilities) {
 		super(capabilities);
@@ -32,28 +36,47 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		//camera = new Camera(0,10,-100);
 	}
 	
+	public Texture loadTexture(String path){
+		try {	
+			File img = new File("textures/"+path);
+			return TextureIO.newTexture(img, true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		drawable.setGL(new MyGL(gl));
-		gl.glShadeModel(GL2.GL_SMOOTH);		
+		
+		textures.put("roof-2", loadTexture("roof-2.png"));
+		textures.put("curtain", loadTexture("curtain.png"));
+		textures.put("stage", loadTexture("stage.png"));
+		textures.put("plateau", loadTexture("plateau.png"));
+		textures.put("outside-wall", loadTexture("outside-wall.png"));
+		textures.put("inside-wall", loadTexture("inside-wall.png"));
+		textures.put("inside-wall-2", loadTexture("inside-wall-2.png"));
+		textures.put("inside-wall-3", loadTexture("inside-wall-3.png"));
+		textures.put("roof", loadTexture("roof.png"));
+		textures.put("chandelier-3", loadTexture("chandelier-3.png"));
+		textures.put("p-chair-2", loadTexture("p-chair-2.png"));
+		textures.put("p-chair-wood", loadTexture("p-chair-wood.png"));
+		
+		drawable.setGL(new MyGL(gl, textures));
+		gl.glShadeModel(GL2.GL_SMOOTH);
 		gl.glEnable(GL2.GL_DEPTH_TEST);
 		gl.glEnable(GL2.GL_COLOR_MATERIAL);
 		
-		float ambientLight[] = { 0.6f, 0.6f, 0.6f, 0.5f };// 0.5
-		float diffuseLight[] = { 0.15f, 0.15f, 0.15f, 0.5f };// 0.8
-		float specularLight[] = { 0.8f, 0.8f, 0.8f, 1.0f };// 0.3
-		float lightPos[] = {150.0f, 500.0f, -70.0f, 1.0f};
-		
-	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, FloatBuffer.wrap(ambientLight));
-	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, FloatBuffer.wrap(diffuseLight));
-	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, FloatBuffer.wrap(specularLight));
-	    gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, FloatBuffer.wrap(lightPos));
-		
 		gl.glEnable(GL2.GL_LIGHTING);
-		gl.glEnable(GL2.GL_LIGHT0);
-		gl.glEnable(GL2.GL_LIGHT1);
-		gl.glEnable(GL2.GL_LIGHT2);
+		gl.glEnable(GL2.GL_LIGHT0); // sunlight
+		gl.glEnable(GL2.GL_LIGHT1); // chandelier light
+		gl.glEnable(GL2.GL_LIGHT2); // plateau lights start here
+		gl.glEnable(GL2.GL_LIGHT3);
+		gl.glEnable(GL2.GL_LIGHT4);
+		gl.glEnable(GL2.GL_LIGHT5);
+		gl.glEnable(GL2.GL_LIGHT6); // plateau lights end here
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 
 		gl.glClearColor(0.0f, 0.7f, 1.0f, 1.0f);
@@ -66,7 +89,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
-		MyGL gl = new MyGL(drawable.getGL().getGL2());
+		MyGL gl = new MyGL(drawable.getGL().getGL2(), textures);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
@@ -82,6 +105,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 			gl.glVertex3d(1000.0, 0.0, 1000.0);
 			gl.glVertex3d(-1000.0, 0.0, 1000.0);
 		gl.glEnd();
+		
 		gl.drawTheater(100.0, 0.0, 100.0, 200.0, 100.0, 240.0, doorAngle);
 		//gl.drawTheater(-5.0, -0.7, -7.0, 5.0, 9.3, 7.0);
 		gl.glFlush();
@@ -91,7 +115,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		GL2 gl = drawable.getGL().getGL2();
-		drawable.setGL(new MyGL(gl));
+		drawable.setGL(new MyGL(gl, textures));
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		gl.glViewport(0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());

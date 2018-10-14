@@ -4,8 +4,13 @@ import com.jogamp.opengl.glu.GLU;
 
 public class Point {
 	double x, y, z;
+	double angle; //used for circular lighting (to have unitary normal vectors)
 	public Point(double x, double y, double z) {
 		this.x = x; this.y = y; this.z = z;
+	}
+	
+	public Point(double x, double y, double z, double angle) {
+		this.x = x; this.y = y; this.z = z; this.angle = angle;
 	}
 	
 	public Point addToNewPoint(double dx, double dy, double dz) {

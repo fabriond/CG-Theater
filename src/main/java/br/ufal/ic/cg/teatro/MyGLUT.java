@@ -49,22 +49,22 @@ public class MyGLUT extends GLUT {
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][1]];
-				gl.glTexCoord2f(0.0f, 1.0f);
+				gl.glTexCoord2f(0.0f, 3.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][2]];
-				gl.glTexCoord2f(1.0f, 1.0f);
+				gl.glTexCoord2f(3.0f, 3.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][3]];
-				gl.glTexCoord2f(1.0f, 0.0f);
+				gl.glTexCoord2f(3.0f, 0.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 			gl.glEnd();
 		}
 	}
 
-	public void glutSolidCube(final float size){
+	public void glutSolidCube(final float size) {
 		drawBox(GLUgl2.getCurrentGL2(), size, GL2GL3.GL_QUADS);
 	}
 }
