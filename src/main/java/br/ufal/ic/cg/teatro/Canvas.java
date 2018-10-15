@@ -125,7 +125,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 			gl.glVertex3d(-1000.0, 0.0, 1000.0);
 		gl.glEnd();
 		
-		gl.drawTheater(100.0, 0.0, 100.0, 200.0, 100.0, 240.0, doorAngle);
+		gl.drawTheater(doorAngle);
 		//gl.drawTheater(-5.0, -0.7, -7.0, 5.0, 9.3, 7.0);
 		gl.glFlush();
 		gl.glDisable(GL2.GL_TEXTURE_2D);

@@ -28,7 +28,6 @@ public class MyGL extends DebugGL2{
 	private ArrayList<Point> plateauPoints = new ArrayList<>();
 	private ArrayList<Point> innerPlateauPoints = new ArrayList<>();
 	private ArrayList<Point> outerPlateauPoints = new ArrayList<>();
-	private ArrayList<Point> roofPoints = new ArrayList<>();
 	
 	//used to cut-off the bottom plateau at the door
 	private ArrayList<Point> plateauCutPoints = new ArrayList<>();
@@ -41,10 +40,9 @@ public class MyGL extends DebugGL2{
 	private void drawCircularPart(double radius, double xMin, double xMax, double yMin, double yMax, double zMin, double zMax) {
 		Point prevLower = new Point(0, 0, 0);
 		Point prevHigher = new Point(0, 0, 0);
-		double yDiff = yMax - yMin;
-		double zDiff = zMax - zMin;
+		double yDiff = yMax-yMin;
+		double zDiff = zMax-zMin;
 		double yPlateau = yDiff*2/3 + yMin;
-		roofPoints.add(new Point(0.0, yMax, 0.0));
 		loadTexture("inside-wall-3", true);
 		boolean textureFlag;
 		glBegin(GL_QUAD_STRIP);
@@ -64,7 +62,6 @@ public class MyGL extends DebugGL2{
 				outerPlateauPoints.add(new Point(x*2.99/3, yPlateau+5.0, z*2.99/3, ang));
 				innerPlateauPoints.add(new Point(xAux, yPlateau, zAux, ang));
 				innerPlateauPoints.add(new Point(xAux, yPlateau+5.0, zAux, ang));
-				roofPoints.add(new Point(x, yMax, z));
 				
 				if(i >= -20 && i <= 20) {
 					plateauCutPoints.add(new Point(x, yPlateau, z, ang));
@@ -115,30 +112,10 @@ public class MyGL extends DebugGL2{
 				}
 			}
 		glEnd();
-		//drawCircularRoof();
-		//drawCircularFloor(yMin);
 		loadTexture("plateau");
 		drawPlateaus(yDiff, zDiff);
 		unloadTexture();
 		drawColumns(xMin, yMin, zMin, xMax, yMax, zMax);
-	}
-	
-	private void drawCircularRoof() {
-		glBegin(GL_TRIANGLE_FAN);
-		for(Point p : roofPoints) {
-			glNormal3d(0, -1, 0);
-			glVertex3d(p);
-		}
-		glEnd();
-	}
-	
-	private void drawCircularFloor(double yMin) {
-		glBegin(GL_TRIANGLE_FAN);
-		for(Point p : roofPoints) {
-			glNormal3d(0, 1, 0);
-			glVertex3d(p.addToNewPoint(0, yMin-p.y+0.03, 0));
-		}
-		glEnd();
 	}
 	
 	boolean helper = true;
@@ -344,15 +321,15 @@ public class MyGL extends DebugGL2{
 		loadTexture("outside-wall", true);
 		//side walls
 		glPushMatrix();
-			glTranslated(xMin-(wallWidth+0.2)/2.0, (yMax-yMin)/2, zMin+(zMax-zMin)/2-(xMax - xMin)/4);
+			glTranslated(xMin-(wallWidth+0.2)/2.0, (yMax-yMin)/2, zMin+(zMax-zMin)/2-(xMax-xMin)/4);
 			glPushMatrix();
-				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax - xMin)/2+wallWidth*3+0.03);
+				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax-xMin)/2+wallWidth*3+0.03);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 		    
 			glPushMatrix();
 				glTranslated(xMax-xMin+(wallWidth+0.2), 0, 0);
-				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax - xMin)/2+wallWidth*3+0.03/*1.15*/);
+				glScaled(wallWidth, yMax-yMin, zMax-zMin+(xMax-xMin)/2+wallWidth*3+0.03/*1.15*/);
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 		glPopMatrix();
@@ -360,7 +337,7 @@ public class MyGL extends DebugGL2{
 		//glColor(255, 225, 230, 0.5);
 		//front walls
 		glPushMatrix();
-			glTranslated((xMax-xMin+(wallWidth+0.2)*2)/2+xMin-wallWidth, (yMax-yMin)/2, zMin-(xMax - xMin)/2 - wallWidth);
+			glTranslated((xMax-xMin+(wallWidth+0.2)*2)/2+xMin-wallWidth, (yMax-yMin)/2, zMin-(xMax-xMin)/2 - wallWidth);
 			glPushMatrix();
 				glTranslated((xMax-xMin+(wallWidth+0.2)*2)/(2*wallWidth/3-0.1), 0, wallWidth*1.15/2.0-0.1);
 				glScaled((xMax-xMin)/3.0/*+(wallWidth+0.2)*2)/(2*wallWidth/3-0.1)*/, yMax-yMin, wallWidth*2.1/*1.15*/);
@@ -589,7 +566,7 @@ public class MyGL extends DebugGL2{
 		unloadTexture();
 	}
 	
-	public void drawPlateauChair(MyGLUT glut) {
+	private void drawPlateauChair(MyGLUT glut) {
 		//loadTexture("chandelier-3");
 		loadTexture("p-chair-wood");
 		//draw chair back sides
@@ -641,7 +618,7 @@ public class MyGL extends DebugGL2{
 		unloadTexture();
 	}
 	
-	public void setChandelierLighting(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	private void setChandelierLighting(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		float ambientLight[] = {0.30f, 0.30f, 0.30f, 0.2f};
 		float diffuseLight[] = {0.6f, 0.6f, 0.30f, 0.5f};// 0.8
 		float specularLight[] = {0.15f, 0.15f, 0.15f, 1.0f};// 0.3
@@ -655,7 +632,7 @@ public class MyGL extends DebugGL2{
 		
 	}
 	
-	public void loadTexture(String name, boolean vertical, boolean horizontal) {
+	private void loadTexture(String name, boolean vertical, boolean horizontal) {
 		unloadTexture();
 		currentTexture = textures.get(name);
 		currentTexture.bind(this);
@@ -665,11 +642,11 @@ public class MyGL extends DebugGL2{
 		//if(!horizontal && !vertical) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
 	}
 	
-	public void loadTexture(String name, boolean vertical) {
+	private void loadTexture(String name, boolean vertical) {
 		loadTexture(name, vertical, false);
 	}
 	
-	public void loadTexture(String name) {
+	private void loadTexture(String name) {
 		loadTexture(name, false, false);
 	}
 	
@@ -677,7 +654,9 @@ public class MyGL extends DebugGL2{
 		if(currentTexture != null) currentTexture.disable(this);
 	}
 	
-	public void drawTheater(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double doorAngle) {
+	public void drawTheater(double doorAngle) {
+		//these used to be parameters, but I thought it was too cumbersome to use them all the way through
+		double xMin = 100.0, yMin = 0.0, zMin = 100.0, xMax = 200.0, yMax = 100.0, zMax = 240.0;
 		
 		MyGLUT glut = new MyGLUT();
 		GLU glu = GLU.createGLU(this);
@@ -686,7 +665,7 @@ public class MyGL extends DebugGL2{
 		float ambientLight[] = {0.3f, 0.3f, 0.3f, 0.4f};// 0.5
 		float diffuseLight[] = {0.055f, 0.055f, 0.055f, 0.15f};// 0.8
 		float specularLight[] = {0.0055f, 0.0055f, 0.0055f, 0.1f};// 0.3
-		float lightPos[] = {(float) (xMax+xMin)/2.0f, 500.0f, -500.0f, 1.0f};
+		float lightPos[] = {150.0f, 500.0f, -500.0f, 1.0f};
 		
 		glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, FloatBuffer.wrap(ambientLight));
 		glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, FloatBuffer.wrap(diffuseLight));
@@ -746,11 +725,11 @@ public class MyGL extends DebugGL2{
 			
 			glTexCoord2d((xMax-xMin)/4, 0.0);
 			glNormal3d(0, -1, 0);
-			glVertex3d(xMax, yMax, zMin-(xMax - xMin)/2);
+			glVertex3d(xMax, yMax, zMin-(xMax-xMin)/2);
 			
 			glTexCoord2d(0.0, 0.0);
 			glNormal3d(0, -1, 0);
-			glVertex3d(xMin, yMax, zMin-(xMax - xMin)/2);
+			glVertex3d(xMin, yMax, zMin-(xMax-xMin)/2);
 		glEnd();
 		
 		loadTexture("inside-floor");
@@ -766,11 +745,11 @@ public class MyGL extends DebugGL2{
 			
 			glTexCoord2d((xMax-xMin)/4, 0.0);
 			glNormal3d(0, 1, 0);
-			glVertex3d(xMax, yMin+0.03, zMin-(xMax - xMin)/2);
+			glVertex3d(xMax, yMin+0.03, zMin-(xMax-xMin)/2);
 			
 			glTexCoord2d(0.0, 0.0);
 			glNormal3d(0, 1, 0);
-			glVertex3d(xMin, yMin+0.03, zMin-(xMax - xMin)/2);
+			glVertex3d(xMin, yMin+0.03, zMin-(xMax-xMin)/2);
 		glEnd();
 		
 		loadTexture("roof-2", true); //couldn't find roof pictures for texture
@@ -919,7 +898,7 @@ public class MyGL extends DebugGL2{
 		glPushMatrix();
 			glRotated(90, 0, 1, 0);
 			glTranslated(-zMin, 0.0, (xMax-xMin)/2 + xMin);
-			drawCircularPart((xMax - xMin)/2, xMin, xMax, yMin, yMax, zMin, zMax);
+			drawCircularPart((xMax-xMin)/2, xMin, xMax, yMin, yMax, zMin, zMax);
 		glPopMatrix();
 	}
 	
