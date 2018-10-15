@@ -25,6 +25,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	Camera camera;
 	JSlider doorSlider;
 	double doorAngle = 0.0;
+	boolean lightsOn = true;
 	Map<String, Texture> textures = new HashMap<>();
 	
 	public Canvas(int width, int height, GLCapabilities capabilities) {
@@ -63,6 +64,12 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		textures.put("chandelier-3", loadTexture("chandelier-3.png"));
 		textures.put("p-chair-2", loadTexture("p-chair-2.png"));
 		textures.put("p-chair-wood", loadTexture("p-chair-wood.png"));
+		textures.put("stage-sidewall", loadTexture("stage-sidewall.png"));
+		textures.put("n-chair", loadTexture("n-chair.png"));
+		textures.put("n-chair-2", loadTexture("n-chair-2.png"));
+		textures.put("inside-roof", loadTexture("inside-roof.png"));
+		textures.put("inside-floor", loadTexture("inside-floor.png"));
+		textures.put("soundbox", loadTexture("soundbox.png"));
 		
 		drawable.setGL(new MyGL(gl, textures));
 		gl.glShadeModel(GL2.GL_SMOOTH);
@@ -71,12 +78,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		
 		gl.glEnable(GL2.GL_LIGHTING);
 		gl.glEnable(GL2.GL_LIGHT0); // sunlight
-		gl.glEnable(GL2.GL_LIGHT1); // chandelier light
-		gl.glEnable(GL2.GL_LIGHT2); // plateau lights start here
-		gl.glEnable(GL2.GL_LIGHT3);
-		gl.glEnable(GL2.GL_LIGHT4);
-		gl.glEnable(GL2.GL_LIGHT5);
-		gl.glEnable(GL2.GL_LIGHT6); // plateau lights end here
+		//gl.glLightModelf(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 
 		gl.glClearColor(0.0f, 0.7f, 1.0f, 1.0f);
@@ -86,10 +88,27 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 	public void dispose(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
 	}
+	
+	private void updateLights(MyGL gl) {
+		if(lightsOn) {
+			gl.glEnable(GL2.GL_LIGHT1); // chandelier light
+			gl.glEnable(GL2.GL_LIGHT2); // plateau lights start here
+			gl.glEnable(GL2.GL_LIGHT3);
+			gl.glEnable(GL2.GL_LIGHT4);
+			gl.glEnable(GL2.GL_LIGHT5); // plateau lights end here
+		} else {
+			gl.glDisable(GL2.GL_LIGHT1); // chandelier light
+			gl.glDisable(GL2.GL_LIGHT2); // plateau lights start here
+			gl.glDisable(GL2.GL_LIGHT3);
+			gl.glDisable(GL2.GL_LIGHT4);
+			gl.glDisable(GL2.GL_LIGHT5); // plateau lights end here
+		}
+	}
 
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		MyGL gl = new MyGL(drawable.getGL().getGL2(), textures);
+		updateLights(gl);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
@@ -163,6 +182,10 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 				doorAngle-=1.5;
 				doorSlider.setValue((int) doorAngle*100);
 			}
+		}
+		
+		else if(e.getKeyCode() == KeyEvent.VK_T) {
+			lightsOn = !lightsOn;
 		}
 		
 		display();		

@@ -22,6 +22,10 @@ public class Camera {
 		return eyePos.x+dx;
 	}
 	
+	public double getCenterY() {
+		return eyePos.y+dy;
+	}
+	
 	public double getCenterZ() {
 		return eyePos.z+dz;
 	}

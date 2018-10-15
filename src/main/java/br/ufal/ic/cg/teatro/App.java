@@ -29,6 +29,7 @@ public class App {
 		jpanel.add(new JLabel("Turn Camera: Arrow Keys"));
 		jpanel.add(new JLabel("Fly: Space bar and V"));
 		jpanel.add(new JLabel("Turn Door: E and R"));
+		jpanel.add(new JLabel("Turn Lights On/Off: T"));
 		jpanel.add(new JLabel(" "));
 		jpanel.add(new JLabel("Door Slider:"));
 		JSlider doorSlider = new JSlider(JSlider.HORIZONTAL, 0, 90, 0);

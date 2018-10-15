@@ -23,7 +23,7 @@ public class MyGLUT extends GLUT {
 		{5, 6, 2, 1},
 		{7, 4, 0, 3}
 	};
-	private void drawBox(final GL2 gl, final float size, final int type) {
+	private void drawBox(final GL2 gl, final float size, final int type, boolean singleSideTexture) {
 		if (boxVertices == null) {
 			final float[][] v = new float[8][];
 			for (int i = 0; i < 8; i++) {
@@ -45,26 +45,32 @@ public class MyGLUT extends GLUT {
 				gl.glNormal3fv(n[i], 0);
 				
 				float[] vt = v[faces[i][0]];
-				gl.glTexCoord2f(0.0f, 0.0f);
+				if(i == 2 || i == 0 || !singleSideTexture) gl.glTexCoord2f(0.0f, 0.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][1]];
-				gl.glTexCoord2f(0.0f, 3.0f);
+				if(!singleSideTexture) gl.glTexCoord2f(0.0f, 3.0f);
+				else if(i == 2 || i == 0) gl.glTexCoord2f(0.0f, 1.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][2]];
-				gl.glTexCoord2f(3.0f, 3.0f);
+				if(!singleSideTexture) gl.glTexCoord2f(3.0f, 3.0f);
+				else if(i == 2 || i == 0) gl.glTexCoord2f(1.0f, 1.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][3]];
-				gl.glTexCoord2f(3.0f, 0.0f);
+				if(!singleSideTexture) gl.glTexCoord2f(3.0f, 0.0f);
+				if(i == 2 || i == 0) gl.glTexCoord2f(1.0f, 0.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
-				
 			gl.glEnd();
 		}
 	}
 
 	public void glutSolidCube(final float size) {
-		drawBox(GLUgl2.getCurrentGL2(), size, GL2GL3.GL_QUADS);
+		drawBox(GLUgl2.getCurrentGL2(), size, GL2GL3.GL_QUADS, false);
+	}
+	
+	public void glutCubeFrontAndBack(final float size){
+		drawBox(GLUgl2.getCurrentGL2(), size, GL2GL3.GL_QUADS, true);
 	}
 }
