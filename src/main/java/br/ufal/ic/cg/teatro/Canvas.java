@@ -34,44 +34,35 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		addGLEventListener(this);
 		addKeyListener(this);
 		camera = new Camera(150.0, 10.0, -100.0);
-		//camera = new Camera(0,10,-100);
 	}
 	
-	public Texture loadTexture(String path){
+	public void loadTexture(String file){
 		try {	
-			File img = new File("textures/"+path);
-			return TextureIO.newTexture(img, true);
+			File img = new File("textures/"+file);
+			textures.put(file.split("\\.")[0], TextureIO.newTexture(img, true));
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Texture file not found, please make sure all texture files loaded in the init function"
+							 + " are in the textures folder inside the project's folder");
+			System.exit(0);
 		}
-		return null;
 	}
 	
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
 		
-		textures.put("roof-2", loadTexture("roof-2.png"));
-		textures.put("curtain", loadTexture("curtain.png"));
-		textures.put("stage", loadTexture("stage.png"));
-		textures.put("plateau", loadTexture("plateau.png"));
-		textures.put("outside-wall", loadTexture("outside-wall.png"));
-		textures.put("inside-wall", loadTexture("inside-wall.png"));
-		textures.put("inside-wall-2", loadTexture("inside-wall-2.png"));
-		textures.put("inside-wall-3", loadTexture("inside-wall-3.png"));
-		textures.put("inside-wall-4", loadTexture("inside-wall-4.png"));
-		textures.put("roof", loadTexture("roof.png"));
-		textures.put("chandelier-3", loadTexture("chandelier-3.png"));
-		textures.put("p-chair-2", loadTexture("p-chair-2.png"));
-		textures.put("p-chair-wood", loadTexture("p-chair-wood.png"));
-		textures.put("stage-sidewall", loadTexture("stage-sidewall.png"));
-		textures.put("n-chair", loadTexture("n-chair.png"));
-		textures.put("n-chair-2", loadTexture("n-chair-2.png"));
-		textures.put("inside-roof", loadTexture("inside-roof.png"));
-		textures.put("inside-floor", loadTexture("inside-floor.png"));
-		textures.put("soundbox", loadTexture("soundbox.png"));
-		textures.put("door", loadTexture("door.png"));
+		loadTexture("curtain.png");
+		loadTexture("door.png");
+		loadTexture("inside-roof.png");
+		loadTexture("inside-wall.png");
+		loadTexture("outside-wall.png");
+		loadTexture("p-chair.png");
+		loadTexture("p-chair-wood.png");
+		loadTexture("floor.png");
+		loadTexture("roof.png");
+		loadTexture("soundbox.png");
+		loadTexture("stage.png");
+		loadTexture("stage-sidewall.png");		
 		
 		drawable.setGL(new MyGL(gl, textures));
 		gl.glShadeModel(GL2.GL_SMOOTH);
@@ -80,7 +71,6 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		
 		gl.glEnable(GL2.GL_LIGHTING);
 		gl.glEnable(GL2.GL_LIGHT0); // sunlight
-		//gl.glLightModelf(GL2.GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
 		gl.glEnable(GL2.GL_TEXTURE_2D);
 
 		gl.glClearColor(0.0f, 0.7f, 1.0f, 1.0f);
@@ -115,10 +105,8 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		gl.glLoadIdentity();
 		
 		camera.setLookAt(GLU.createGLU(gl));
-		//System.out.println(camera);
 		
 		//draw Ground
-		//gl.glColor(51, 217, 178, 1.0);
 		gl.glColor(25, 42, 86, 1.0);
 		gl.glBegin(GL2.GL_QUADS);
 			gl.glVertex3d(-1000.0, 0.0, -1000.0);
@@ -128,9 +116,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		gl.glEnd();
 		
 		gl.drawTheater(doorAngle);
-		//gl.drawTheater(-5.0, -0.7, -7.0, 5.0, 9.3, 7.0);
 		gl.glFlush();
-		gl.glDisable(GL2.GL_TEXTURE_2D);
 	}
 
 	@Override

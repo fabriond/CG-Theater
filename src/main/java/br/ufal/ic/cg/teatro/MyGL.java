@@ -43,7 +43,7 @@ public class MyGL extends DebugGL2{
 		double yDiff = yMax-yMin;
 		double zDiff = zMax-zMin;
 		double yPlateau = yDiff*2/3 + yMin;
-		loadTexture("inside-wall-4");
+		enableTexture("inside-wall", false, false);
 		boolean textureFlag = true;
 		glBegin(GL_QUAD_STRIP);
 			for(int i = -90; i <= 90; i+=10){
@@ -114,9 +114,9 @@ public class MyGL extends DebugGL2{
 				}
 			}
 		glEnd();
-		loadTexture("plateau");
+		enableTexture("floor", false, false);
 		drawPlateaus(yDiff, zDiff);
-		unloadTexture();
+		disableTexture();
 		drawColumns(xMin, yMin, zMin, xMax, yMax, zMax);
 	}
 	
@@ -159,7 +159,7 @@ public class MyGL extends DebugGL2{
 							glTexCoord2d(20.0, 4.0);
 							glVertex3d(plateauPoints.get(1).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
 							if(j < 2) {
-								for(int k = 0; k < plateauPoints.size(); ++k/*Point p : plateauPoints*/) {
+								for(int k = 0; k < plateauPoints.size(); ++k) {
 									Point p = plateauPoints.get(k);
 								
 									if(k%4 == 0) glTexCoord2d(0.0, 0.0);     // k == 0
@@ -174,7 +174,7 @@ public class MyGL extends DebugGL2{
 							}
 							else {
 								boolean stopped = false;
-								for(int k = 0; k < plateauPoints.size(); ++k/*Point p : plateauPoints*/) {
+								for(int k = 0; k < plateauPoints.size(); ++k) {
 									Point p = plateauPoints.get(k);
 									
 									if(plateauCutPoints.contains(p) && !stopped) {
@@ -219,7 +219,7 @@ public class MyGL extends DebugGL2{
 					glTexCoord2d(20.0, 2.0);
 					glVertex3d(innerPlateauPoints.get(1).addToNewPoint(-zDiff/1.5, 0.0, 0.0));
 					if(j < 2) {
-						for(int k = 0; k < innerPlateauPoints.size(); ++k/*Point p : innerPlateauPoints*/) {
+						for(int k = 0; k < innerPlateauPoints.size(); ++k) {
 							Point p = innerPlateauPoints.get(k);
 							if(k%4 == 0) glTexCoord2d(0.0, 0.0);     // k == 0
 							if((k+3)%4 == 0) glTexCoord2d(0.0, 2.0); // k == 1
@@ -320,7 +320,7 @@ public class MyGL extends DebugGL2{
 		double wallWidth = 5.0;
 		double doorSize = (xMax-xMin+(wallWidth+0.2)*2)/6;
 		glColor(255, 205, 210, 0.5);
-		loadTexture("outside-wall", true);
+		enableTexture("outside-wall", true, false);
 		//side walls
 		glPushMatrix();
 			glTranslated(xMin-(wallWidth+0.2)/2.0, (yMax-yMin)/2, zMin+(zMax-zMin)/2-(xMax-xMin)/4);
@@ -391,7 +391,7 @@ public class MyGL extends DebugGL2{
 					glut.glutSolidCube(1.0f);
 				glPopMatrix();
 				//orange roof piece
-				loadTexture("roof", false);
+				enableTexture("roof", true, false);
 				glColor(225, 112, 85,1.0);
 				glTranslated(0,0,-wallWidth*9.5);
 				glRotated(45, 0, 0, 1);
@@ -401,7 +401,7 @@ public class MyGL extends DebugGL2{
 			glPopMatrix();
 			
 			//doors
-			loadTexture("door");
+			enableTexture("door", false, false);
 			glColor(215, 204, 200, 1.0);
 			glPushMatrix();
 				glTranslated(-doorSize, (yMax-yMin)/8.0-(yMax-yMin)/1.97, wallWidth/1.2);
@@ -419,17 +419,6 @@ public class MyGL extends DebugGL2{
 				glut.glutCubeFrontAndBack(1.0f);
 			glPopMatrix();
 		glPopMatrix();
-	}
-	
-	private void setBulbLight(int light, float[] ambientLight, float[] diffuseLight, float[] specularLight, float[] lightPos, float[] spotDirection) {
-		glLightfv(light, GL_AMBIENT, FloatBuffer.wrap(ambientLight));
-		glLightfv(light, GL_DIFFUSE, FloatBuffer.wrap(diffuseLight));
-		glLightfv(light, GL_SPECULAR, FloatBuffer.wrap(specularLight));
-		glLightfv(light, GL_POSITION, FloatBuffer.wrap(lightPos));
-		glLightf(light, GL_SPOT_CUTOFF, 90.0f);
-		glLightf(light, GL_CONSTANT_ATTENUATION, 0.1f);
-		glLightf(light, GL_LINEAR_ATTENUATION, 0.01f);
-		glLightfv(light, GL_SPOT_DIRECTION, FloatBuffer.wrap(spotDirection));
 	}
 	
 	private void drawColumns(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
@@ -479,6 +468,7 @@ public class MyGL extends DebugGL2{
 		drawSideColumns(xMin, yMin, zMin, xMax, yMax, zMax, p, false);
 	}
 	
+	//draws columns on the straight part of the plateaus
 	private void drawSideColumns(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, Point p, boolean right) {
 		MyGLUT glut = new MyGLUT();
 		GLU glu = GLU.createGLU(this);
@@ -533,7 +523,7 @@ public class MyGL extends DebugGL2{
 	}
 	
 	private void drawInnerChair(MyGLUT glut) {
-		loadTexture("p-chair-2", true);
+		enableTexture("p-chair", true, false);
 		//chair back
 		glColor(255, 177, 66, 0.5);
 		glPushMatrix();
@@ -550,7 +540,7 @@ public class MyGL extends DebugGL2{
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
 		
-		loadTexture("p-chair-wood");
+		enableTexture("p-chair-wood", false, false);
 		//chair sides
 		glColor(204, 142, 53,1.0);
 		glPushMatrix();
@@ -565,12 +555,11 @@ public class MyGL extends DebugGL2{
 			glScaled(5.75, 6, 1);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
-		unloadTexture();
+		disableTexture();
 	}
 	
 	private void drawPlateauChair(MyGLUT glut) {
-		//loadTexture("chandelier-3");
-		loadTexture("p-chair-wood");
+		enableTexture("p-chair-wood", false, false);
 		//draw chair back sides
 		glColor(204, 142, 53,1.0);
 		glPushMatrix();
@@ -600,7 +589,7 @@ public class MyGL extends DebugGL2{
 			glScaled(1, 3, 1);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
-		loadTexture("p-chair-2");
+		enableTexture("p-chair", false, false);
 		//chair seat
 		glColor(232, 189, 136, 0.5);
 		glPushMatrix();
@@ -617,7 +606,18 @@ public class MyGL extends DebugGL2{
 			glScaled(5, 5.25, 1);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
-		unloadTexture();
+		disableTexture();
+	}
+	
+	private void setBulbLight(int light, float[] ambientLight, float[] diffuseLight, float[] specularLight, float[] lightPos, float[] spotDirection) {
+		glLightfv(light, GL_AMBIENT, FloatBuffer.wrap(ambientLight));
+		glLightfv(light, GL_DIFFUSE, FloatBuffer.wrap(diffuseLight));
+		glLightfv(light, GL_SPECULAR, FloatBuffer.wrap(specularLight));
+		glLightfv(light, GL_POSITION, FloatBuffer.wrap(lightPos));
+		glLightf(light, GL_SPOT_CUTOFF, 90.0f);
+		glLightf(light, GL_CONSTANT_ATTENUATION, 0.1f);
+		glLightf(light, GL_LINEAR_ATTENUATION, 0.01f);
+		glLightfv(light, GL_SPOT_DIRECTION, FloatBuffer.wrap(spotDirection));
 	}
 	
 	private void setChandelierLighting(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
@@ -634,25 +634,27 @@ public class MyGL extends DebugGL2{
 		
 	}
 	
-	private void loadTexture(String name, boolean vertical, boolean horizontal) {
-		unloadTexture();
+	/**
+	 * @param name indicates the name of the texture (should be in the textures map)
+	 * @param vertical indicates whether the texture should be applied vertically
+	 * @param horizontal indicates whether the texture should be applied horizontally
+	 * */
+	
+	private void enableTexture(String name, boolean vertical, boolean horizontal) {
+		disableTexture();
 		currentTexture = textures.get(name);
-		currentTexture.bind(this);
-		currentTexture.enable(this);
-		if(!horizontal) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
-		if(!vertical) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
-		//if(!horizontal && !vertical) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+		try {
+			currentTexture.bind(this);
+			currentTexture.enable(this);
+			if(!horizontal) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
+			if(!vertical) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
+		} catch(Exception e) {
+			System.err.println("Requested texture was not loaded in initialization");
+			System.exit(0);
+		}
 	}
 	
-	private void loadTexture(String name, boolean vertical) {
-		loadTexture(name, vertical, false);
-	}
-	
-	private void loadTexture(String name) {
-		loadTexture(name, false, false);
-	}
-	
-	private void unloadTexture() {
+	private void disableTexture() {
 		if(currentTexture != null) currentTexture.disable(this);
 	}
 	
@@ -678,7 +680,7 @@ public class MyGL extends DebugGL2{
 		//glColor3d(1, 0, 0);
 		glColor(255, 236, 179,1.0);
 		//regular walls
-		loadTexture("inside-wall-4");
+		enableTexture("inside-wall", false, false);
 		glBegin(GL_QUAD_STRIP);
 			glTexCoord2d(0.0, 0.0);
 			glNormal3d(1, 0, 0);
@@ -714,7 +716,7 @@ public class MyGL extends DebugGL2{
 			glVertex3d(xMax, yMin, zMin);
 		glEnd();		
 		
-		loadTexture("inside-roof");
+		enableTexture("inside-roof", false, false);
 		//inner roof
 		glBegin(GL_QUADS);
 			glTexCoord2d(0.0, (zMax-zMin)/4);
@@ -734,7 +736,7 @@ public class MyGL extends DebugGL2{
 			glVertex3d(xMin, yMax, zMin-(xMax-xMin)/2);
 		glEnd();
 		
-		loadTexture("inside-floor");
+		enableTexture("floor", false, false);
 		//inner roof
 		glBegin(GL_QUADS);
 			glTexCoord2d(0.0, (zMax-zMin)/4);
@@ -754,19 +756,19 @@ public class MyGL extends DebugGL2{
 			glVertex3d(xMin, yMin+0.03, zMin-(xMax-xMin)/2);
 		glEnd();
 		
-		loadTexture("roof-2", true); //couldn't find roof pictures for texture
+		enableTexture("roof", false, false); //couldn't find roof pictures of the actual theater for texture
 		//outer roof
 		glColor(225, 112, 85,1.0);
 		glBegin(GL_QUAD_STRIP);
-			glTexCoord2d(1.0, 1.0);
+			glTexCoord2d(3.0, 6.0);
 			glNormal3d(1.0/Math.sqrt(2.0), 1.0/Math.sqrt(2.0), 0.0); 
 			glVertex3d(xMin-0.5, yMax-0.01, zMin-(xMax-xMin)/2-3);
 			
-			glTexCoord2d(1.0, 0.0);
+			glTexCoord2d(3.0, 0.0);
 			glNormal3d(1.0/Math.sqrt(2.0), 1.0/Math.sqrt(2.0), 0.0);
 			glVertex3d(xMin-0.5, yMax-0.01, zMax+zMin/2);
 			
-			glTexCoord2d(0.0, 1.0);
+			glTexCoord2d(0.0, 6.0);
 			glNormal3d(0.0, 1.0, 0.0);
 			glVertex3d((xMax+xMin)/2, yMax*1.5, zMin-(xMax-xMin)/2-3);
 			
@@ -774,19 +776,19 @@ public class MyGL extends DebugGL2{
 			glNormal3d(0.0, 1.0, 0.0);
 			glVertex3d((xMax+xMin)/2, yMax*1.5, zMax+zMin/2);
 			
-			glTexCoord2d(1.0, 1.0);
+			glTexCoord2d(3.0, 6.0);
 			glNormal3d(-1.0/Math.sqrt(2.0), 1.0/Math.sqrt(2.0), 0.0);
 			glVertex3d(xMax+0.5, yMax-0.01, zMin-(xMax-xMin)/2-3);
 			
-			glTexCoord2d(1.0, 0.0);
+			glTexCoord2d(3.0, 0.0);
 			glNormal3d(-1.0/Math.sqrt(2.0), 1.0/Math.sqrt(2.0), 0.0);
 			glVertex3d(xMax+0.5, yMax-0.01, zMax+zMin/2);
 		glEnd();		
-		unloadTexture();
+		disableTexture();
 		
 		//stage curtain
 		glColor(198, 40, 40, 1.0);
-		loadTexture("curtain", true);
+		enableTexture("curtain", true, false);
 		glBegin(GL_QUADS);
 			glNormal3d(0, 0, -1);
 			glTexCoord2d(0.0, 6.0);
@@ -801,7 +803,7 @@ public class MyGL extends DebugGL2{
 			glTexCoord2d(3.0, 6.0);
 			glVertex3d(xMax, yMax, zMax+(zMin-zMax)/4);
 		glEnd();
-		unloadTexture();
+		disableTexture();
 		//chandelier
 		glPushMatrix();
 			glTranslated((xMax-xMin)*1.5, yMax-Math.sqrt(3.0*3.0), (zMax-zMin));
@@ -846,7 +848,7 @@ public class MyGL extends DebugGL2{
 		glPopMatrix();
 		
 		//stage
-		loadTexture("stage");
+		enableTexture("stage", false, false);
 		glColor(121, 85, 72, 1.0);
 		glPushMatrix();
 			glTranslated((xMax+xMin)/2, yMin+(yMax-yMin)/20, zMax-(zMax-zMin)/6);
@@ -855,9 +857,9 @@ public class MyGL extends DebugGL2{
 				glut.glutSolidCube(1.0f);
 			glPopMatrix();
 		glPopMatrix();
-		unloadTexture();
+		disableTexture();
 		
-		loadTexture("soundbox");
+		enableTexture("soundbox", false, false);
 		//left column
 		glPushMatrix();
 			glTranslated(xMax-(xMax-xMin)/10, (yMin+yMax)/2, zMax-(zMax-zMin)/5);
@@ -871,11 +873,11 @@ public class MyGL extends DebugGL2{
 				glColor(215, 204, 200,1.0);
 			glPopMatrix();
 			glScaled((xMax-xMin)/5-0.3, yMax-0.3, 2*(zMax-zMin)/5-0.3);
-			loadTexture("stage-sidewall", true);
+			enableTexture("stage-sidewall", true, false);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
 		
-		loadTexture("soundbox");
+		enableTexture("soundbox", false, false);
 		//right column
 		glPushMatrix();
 			glTranslated(xMin+(xMax-xMin)/10, yMin+yMax/2, zMax-2*(zMax-zMin)/10);
@@ -888,7 +890,7 @@ public class MyGL extends DebugGL2{
 				glut.glutCubeFrontAndBack(1.0f);
 				glColor(215, 204, 200,1.0);
 			glPopMatrix();
-			loadTexture("stage-sidewall", true);
+			enableTexture("stage-sidewall", true, false);
 			glScaled((xMax-xMin)/5-0.3, yMax-0.3, 2*(zMax-zMin)/5-0.3);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
