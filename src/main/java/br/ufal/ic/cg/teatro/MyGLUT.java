@@ -67,7 +67,7 @@ public class MyGLUT extends GLUT {
 	}
 
 	/*
-	 * Overloaded because glutSolidCube doesn't add texture coords by default
+	 * Overloaded because glutSolidCube doesn't add texture coordinates by default
 	 */
 	public void glutSolidCube(final float size) {
 		drawBox(GLUgl2.getCurrentGL2(), size, GL2GL3.GL_QUADS, false);

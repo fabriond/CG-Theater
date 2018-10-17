@@ -117,9 +117,12 @@ public class MyGL extends DebugGL2{
 		enableTexture("floor", false, false);
 		drawPlateaus(yDiff, zDiff);
 		disableTexture();
-		drawColumns(xMin, yMin, zMin, xMax, yMax, zMax);
+		drawPlateauProps(xMin, yMin, zMin, xMax, yMax, zMax);
 	}
 	
+	/**
+	 * Helper function for setting texture coordinates for the circular part of the theater 
+	 * */
 	boolean helper = true;
 	private void setCircularTexture(boolean textureFlag) {
 		if(textureFlag && helper) glTexCoord2d(0.0, 0.0);
@@ -129,6 +132,9 @@ public class MyGL extends DebugGL2{
 		helper = !helper;
 	}
 	
+	/**
+	 * Helper function for setting the normals for the circular part of the theater (used for lighting) 
+	 * */
 	private void setCircularNormal(double angle) {
 		glNormal3d(-Math.cos(angle), 0, -Math.sin(angle));
 	}
@@ -137,6 +143,9 @@ public class MyGL extends DebugGL2{
 		glColor4d(r/255, g/255, b/255, a);
 	}
 
+	/**
+	 * Draws all the plateau levels inside the theater
+	 * */
 	private void drawPlateaus(double yDiff, double zDiff) {
 		//glColor3d(0, 1, 0);
 		//glColor(204, 142, 53, 1.0);
@@ -316,6 +325,9 @@ public class MyGL extends DebugGL2{
 		glNormal3d(p.x, p.y, p.z);
 	}
 	
+	/**
+	 * Draws the outside walls of the theater(and the doors)
+	 * */
 	private void drawOutside(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, double doorAngle, MyGLUT glut) {
 		double wallWidth = 5.0;
 		double doorSize = (xMax-xMin+(wallWidth+0.2)*2)/6;
@@ -421,7 +433,10 @@ public class MyGL extends DebugGL2{
 		glPopMatrix();
 	}
 	
-	private void drawColumns(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
+	/**
+	 * Draws props on the plateaus, like light bulbs, chairs and columns
+	 * */
+	private void drawPlateauProps(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax) {
 		MyGLUT glut = new MyGLUT();
 		GLU glu = GLU.createGLU(this);
 		Point p, aux;
@@ -430,7 +445,7 @@ public class MyGL extends DebugGL2{
 		//glColor(44, 44, 84, 0.5);
 		p = plateauPoints.get(1);
 		
-		drawSideColumns(xMin, yMin, zMin, xMax, yMax, zMax, p, true);
+		drawSidePlateauProps(xMin, yMin, zMin, xMax, yMax, zMax, p, true);
 		
 		for(int i = 1; i < plateauPoints.size(); i+=6) {
 			if(i > 13 && i < 25) continue;
@@ -465,11 +480,13 @@ public class MyGL extends DebugGL2{
 			glPopMatrix();
 		}
 		
-		drawSideColumns(xMin, yMin, zMin, xMax, yMax, zMax, p, false);
+		drawSidePlateauProps(xMin, yMin, zMin, xMax, yMax, zMax, p, false);
 	}
 	
-	//draws columns on the straight part of the plateaus
-	private void drawSideColumns(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, Point p, boolean right) {
+	/**
+	 * Draws props on the straight part of the plateaus
+	 * */
+	private void drawSidePlateauProps(double xMin, double yMin, double zMin, double xMax, double yMax, double zMax, Point p, boolean right) {
 		MyGLUT glut = new MyGLUT();
 		GLU glu = GLU.createGLU(this);
 		
@@ -635,6 +652,9 @@ public class MyGL extends DebugGL2{
 	}
 	
 	/**
+	 * Binds and enables a texture that is in the textures map
+	 * Also sets vertical or horizontal repeating for the given texture
+	 * 
 	 * @param name indicates the name of the texture (should be in the textures map)
 	 * @param vertical indicates whether the texture should be applied vertically
 	 * @param horizontal indicates whether the texture should be applied horizontally
@@ -654,10 +674,16 @@ public class MyGL extends DebugGL2{
 		}
 	}
 	
+	/**
+	 * Disables the currently active texture
+	 * */	
 	private void disableTexture() {
 		if(currentTexture != null) currentTexture.disable(this);
 	}
 	
+	/**
+	 * Main function for drawing the theater
+	 * */
 	public void drawTheater(double doorAngle) {
 		//these used to be parameters, but I thought it was too cumbersome to use them all the way through
 		double xMin = 100.0, yMin = 0.0, zMin = 100.0, xMax = 200.0, yMax = 100.0, zMax = 240.0;

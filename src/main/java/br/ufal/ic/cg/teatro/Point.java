@@ -13,6 +13,9 @@ public class Point {
 		this.x = x; this.y = y; this.z = z; this.angle = angle;
 	}
 	
+	/**
+	 * Creates a new point adding dx, dy and dz to their respective values in the current point
+	 * */
 	public Point addToNewPoint(double dx, double dy, double dz) {
 		return new Point(x+dx, y+dy, z+dz);
 	}
