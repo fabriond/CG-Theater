@@ -649,7 +649,7 @@ public class MyGL extends DebugGL2{
 			if(!horizontal) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_S, GL2.GL_REPEAT);
 			if(!vertical) glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_WRAP_T, GL2.GL_REPEAT);
 		} catch(Exception e) {
-			System.err.println("Requested texture was not loaded in initialization");
+			System.err.println("Requested texture was not loaded in initialization: \""+name+"\"");
 			System.exit(0);
 		}
 	}

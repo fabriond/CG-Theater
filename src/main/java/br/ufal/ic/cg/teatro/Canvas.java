@@ -41,7 +41,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 			File img = new File("textures/"+file);
 			textures.put(file.split("\\.")[0], TextureIO.newTexture(img, true));
 		} catch (Exception e) {
-			System.err.println("Texture file not found, please make sure all texture files loaded in the init function"
+			System.err.println("Texture file not found: \""+file+"\", please make sure all texture files loaded in the init function"
 							 + " are in the textures folder inside the project's folder");
 			System.exit(0);
 		}
