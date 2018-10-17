@@ -43,8 +43,8 @@ public class MyGL extends DebugGL2{
 		double yDiff = yMax-yMin;
 		double zDiff = zMax-zMin;
 		double yPlateau = yDiff*2/3 + yMin;
-		loadTexture("inside-wall-3", true);
-		boolean textureFlag;
+		loadTexture("inside-wall-4");
+		boolean textureFlag = true;
 		glBegin(GL_QUAD_STRIP);
 			for(int i = -90; i <= 90; i+=10){
 				double ang = (i * Math.PI/180);
@@ -53,7 +53,7 @@ public class MyGL extends DebugGL2{
 				double xAux = x*2/3;
 				double zAux = z*2/3;
 				
-				textureFlag = (Math.abs(i/10)%2 == 1); 
+				textureFlag = !textureFlag; 
 
 				//used to draw stands
 				plateauPoints.add(new Point(x, yPlateau, z, ang));
@@ -81,6 +81,7 @@ public class MyGL extends DebugGL2{
 						setCircularTexture(textureFlag);
 						setCircularNormal(ang);
 						glVertex3d(prevHigher);
+						textureFlag = !textureFlag;
 					}
 					
 					setCircularTexture(textureFlag);
@@ -91,6 +92,7 @@ public class MyGL extends DebugGL2{
 					glVertex3d(x, yMax, z);
 					
 					if(i == 20) {
+						textureFlag = !textureFlag;
 						setCircularTexture(textureFlag);
 						setCircularNormal(ang);
 						glVertex3d(x, yMin, z);
@@ -399,14 +401,14 @@ public class MyGL extends DebugGL2{
 			glPopMatrix();
 			
 			//doors
+			loadTexture("door");
 			glColor(215, 204, 200, 1.0);
-			unloadTexture();
 			glPushMatrix();
 				glTranslated(-doorSize, (yMax-yMin)/8.0-(yMax-yMin)/1.97, wallWidth/1.2);
 				glRotated(doorAngle, 0, 1, 0);
 				glTranslated(doorSize/2, 0, 2);
 				glScaled(doorSize, (yMax-yMin)*3.0/11, 2.3);
-				glut.glutSolidCube(1.0f);
+				glut.glutCubeFrontAndBack(1.0f);
 			glPopMatrix();
 
 			glPushMatrix();
@@ -414,7 +416,7 @@ public class MyGL extends DebugGL2{
 				glRotated(-doorAngle, 0, 1, 0);
 				glTranslated(-doorSize/2, 0, 2);
 				glScaled(doorSize, (yMax-yMin)*3.0/11, 2.3);
-				glut.glutSolidCube(1.0f);
+				glut.glutCubeFrontAndBack(1.0f);
 			glPopMatrix();
 		glPopMatrix();
 	}
@@ -676,7 +678,7 @@ public class MyGL extends DebugGL2{
 		//glColor3d(1, 0, 0);
 		glColor(255, 236, 179,1.0);
 		//regular walls
-		loadTexture("inside-wall-3", true);
+		loadTexture("inside-wall-4");
 		glBegin(GL_QUAD_STRIP);
 			glTexCoord2d(0.0, 0.0);
 			glNormal3d(1, 0, 0);
@@ -864,7 +866,7 @@ public class MyGL extends DebugGL2{
 				glColor(250, 250, 250,1.0);
 				glTranslated(-(xMax-xMin)/1.4, (yMax-yMin)/7.5+5.0-(yMin+yMax)/2, -(zMax-zMin)/5-0.3);
 				glScaled((xMax-xMin)/9-0.3, (yMax-yMin)/6, (zMax-zMin)/20-0.3);
-				glRotated(45, 0, 1, 0);
+				glRotated(150, 0, 1, 0);
 				glut.glutCubeFrontAndBack(1.0f);
 				glColor(215, 204, 200,1.0);
 			glPopMatrix();
@@ -882,7 +884,7 @@ public class MyGL extends DebugGL2{
 				glColor(250, 250, 250,1.0);
 				glTranslated((xMax-xMin)/1.4, (yMax-yMin)/7.5+5.0-(yMin+yMax)/2, -(zMax-zMin)/5-0.3);
 				glScaled((xMax-xMin)/9-0.3, (yMax-yMin)/6, (zMax-zMin)/20-0.3);
-				glRotated(-45, 0, 1, 0);
+				glRotated(-150, 0, 1, 0);
 				glut.glutCubeFrontAndBack(1.0f);
 				glColor(215, 204, 200,1.0);
 			glPopMatrix();

@@ -60,6 +60,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		textures.put("inside-wall", loadTexture("inside-wall.png"));
 		textures.put("inside-wall-2", loadTexture("inside-wall-2.png"));
 		textures.put("inside-wall-3", loadTexture("inside-wall-3.png"));
+		textures.put("inside-wall-4", loadTexture("inside-wall-4.png"));
 		textures.put("roof", loadTexture("roof.png"));
 		textures.put("chandelier-3", loadTexture("chandelier-3.png"));
 		textures.put("p-chair-2", loadTexture("p-chair-2.png"));
@@ -70,6 +71,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		textures.put("inside-roof", loadTexture("inside-roof.png"));
 		textures.put("inside-floor", loadTexture("inside-floor.png"));
 		textures.put("soundbox", loadTexture("soundbox.png"));
+		textures.put("door", loadTexture("door.png"));
 		
 		drawable.setGL(new MyGL(gl, textures));
 		gl.glShadeModel(GL2.GL_SMOOTH);

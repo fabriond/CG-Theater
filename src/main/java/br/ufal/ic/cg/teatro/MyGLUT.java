@@ -45,22 +45,22 @@ public class MyGLUT extends GLUT {
 				gl.glNormal3fv(n[i], 0);
 				
 				float[] vt = v[faces[i][0]];
-				if(i == 2 || i == 0 || !singleSideTexture) gl.glTexCoord2f(0.0f, 0.0f);
+				if(i >= 4 || !singleSideTexture) gl.glTexCoord2f(0.0f, 0.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][1]];
 				if(!singleSideTexture) gl.glTexCoord2f(0.0f, 3.0f);
-				else if(i == 2 || i == 0) gl.glTexCoord2f(0.0f, 1.0f);
+				else if(i >= 4) gl.glTexCoord2f(0.0f, 1.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][2]];
 				if(!singleSideTexture) gl.glTexCoord2f(3.0f, 3.0f);
-				else if(i == 2 || i == 0) gl.glTexCoord2f(1.0f, 1.0f);
+				else if(i >= 4) gl.glTexCoord2f(1.0f, 1.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 				
 				vt = v[faces[i][3]];
 				if(!singleSideTexture) gl.glTexCoord2f(3.0f, 0.0f);
-				if(i == 2 || i == 0) gl.glTexCoord2f(1.0f, 0.0f);
+				if(i >= 4) gl.glTexCoord2f(1.0f, 0.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 			gl.glEnd();
 		}
