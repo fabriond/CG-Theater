@@ -56,6 +56,7 @@ public class Canvas extends GLCanvas implements GLEventListener, KeyListener {
 		loadTexture("inside-roof.png");
 		loadTexture("inside-wall.png");
 		loadTexture("outside-wall.png");
+		loadTexture("chair.png");
 		loadTexture("p-chair.png");
 		loadTexture("p-chair-wood.png");
 		loadTexture("floor.png");

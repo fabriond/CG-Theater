@@ -540,21 +540,22 @@ public class MyGL extends DebugGL2{
 	}
 	
 	private void drawInnerChair(MyGLUT glut) {
-		enableTexture("p-chair", true, false);
+		enableTexture("chair", true, false);
 		//chair back
-		glColor(255, 177, 66, 0.5);
+		//glColor(255, 177, 66, 0.5);
+		glColor(204, 160, 121, 0.5);
 		glPushMatrix();
-			glTranslated(0, 5, 0);
+			glTranslated(0, 5, -1);
 			glRotated(-10, 1, 0, 0);
 			glScaled(5, 10, 1.5);
-			glut.glutSolidCube(1.0f);
+			glut.glutCubeFrontAndBack(1.0f);
 		glPopMatrix();
 		//chair seat
 		glPushMatrix();
-			glTranslated(0, 3, 2);
+			glTranslated(0, 3, 1.5);
 			glRotated(90, 1, 0, 0);
-			glScaled(5, 8, 1.5);
-			glut.glutSolidCube(1.0f);
+			glScaled(5, 7, 1.5);
+			glut.glutCubeFrontAndBack(1.0f);
 		glPopMatrix();
 		
 		enableTexture("p-chair-wood", false, false);
@@ -615,13 +616,13 @@ public class MyGL extends DebugGL2{
 			glScaled(5, 4.5, 1.5);
 			glut.glutSolidCube(1.0f);
 		glPopMatrix();
-		
+		enableTexture("chair", true, true);
 		//chair back
 		glColor(230, 238, 156, 1.0);
 		glPushMatrix();
 			glTranslated(0, 7.375, 0);
 			glScaled(5, 5.25, 1);
-			glut.glutSolidCube(1.0f);
+			glut.glutCubeFrontAndBack(1.0f);
 		glPopMatrix();
 		disableTexture();
 	}

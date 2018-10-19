@@ -60,7 +60,7 @@ public class MyGLUT extends GLUT {
 				
 				vt = v[faces[i][3]];
 				if(!singleSideTexture) gl.glTexCoord2f(3.0f, 0.0f);
-				if(i >= 4) gl.glTexCoord2f(1.0f, 0.0f);
+				else if(i >= 4) gl.glTexCoord2f(1.0f, 0.0f);
 				gl.glVertex3f(vt[0] * size, vt[1] * size, vt[2] * size);
 			gl.glEnd();
 		}
